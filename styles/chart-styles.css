@@ -1,0 +1,21 @@
+/* Externalized styles for chart component */
+
+[data-chart] {
+  /* Add dynamic styles here */
+}
+
+/* Styles for indicator */
+.indicator {
+  --color-bg: transparent;
+  --color-border: transparent;
+}
+
+/* Styles for legend items */
+.legend-item {
+  background-color: transparent;
+}
+
+/* Added styles for legend item background color */
+.legend-item-bg {
+  background-color: transparent; /* Replace with dynamic color */
+}
