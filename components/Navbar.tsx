@@ -28,6 +28,22 @@ export default function Navbar() {
     }
   }
 
+  // Updated handleNavigation to redirect to homepage with hash for sections
+  const handleNavigation = (href: string) => {
+    setIsOpen(false);
+    if (href.startsWith("#")) {
+      // Redirect to the homepage with the hash
+      window.location.href = `/${href}`;
+    } else if (href.startsWith("/")) {
+      // Navigate to an absolute path
+      window.location.href = href;
+    } else {
+      // Navigate to a new page
+      window.location.hash = ""; // Clear any existing hash
+      window.location.href = href;
+    }
+  };
+
   return (
     <nav className="fixed top-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-md z-50 border-b border-gray-200 dark:border-gray-700">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -39,13 +55,13 @@ export default function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             {navLinks.map((link) => (
-              <Link
+              <button
                 key={link.href}
-                href={link.href}
+                onClick={() => handleNavigation(link.href)}
                 className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
               >
                 {link.label}
-              </Link>
+              </button>
             ))}
             <button
               onClick={toggleTheme}
