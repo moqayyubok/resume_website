@@ -2,6 +2,7 @@ import { type NextRequest, NextResponse } from "next/server"
 import { db } from "@/lib/database"
 import { requireAuth } from "@/lib/auth"
 
+// API route for certifications
 export async function GET() {
   try {
     const certifications = await db.getCertifications()

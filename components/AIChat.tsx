@@ -8,7 +8,7 @@ export default function AIChat() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: "Hi! I'm Talha's AI assistant. I have access to his complete portfolio data including skills, education, certifications, projects, and blog posts. How can I help you learn more about his work and experience?",
+      content: "Hi! I'm Qayyum's AI assistant. I have access to his complete portfolio data including skills, education, certifications, projects, and blog posts. How can I help you learn more about his work and experience?",
     },
   ])
   const [input, setInput] = useState("")
@@ -56,7 +56,7 @@ export default function AIChat() {
       const errorMessage = err instanceof Error ? err.message : "Unknown error occurred";
       setMessages((prev) => [...prev, {
         role: "assistant",
-        content: `I apologize, but I encountered an error: ${errorMessage}. Please try asking your question again, or feel free to contact Talha directly at talha.asher@talhaasher.co.uk.`
+        content: `I apologize, but I encountered an error: ${errorMessage}. Please try asking your question again, or feel free to contact Qayyum directly at qayyumbokhari77@gmail.com.`
       }]);
     } finally {
       setIsLoading(false);
@@ -99,8 +99,8 @@ export default function AIChat() {
               <div className="flex items-center gap-3">
                 <Bot className="w-8 h-8 text-blue-600 dark:text-blue-400" />
                 <div>
-                  <h3 className="text-xl font-semibold">Talha's AI Assistant</h3>
-                  <p className="text-sm text-gray-500 dark:text-gray-400">Ask me anything about Talha's portfolio</p>
+                  <h3 className="text-xl font-semibold">Qayyum's AI Assistant</h3>
+                  <p className="text-sm text-gray-500 dark:text-gray-400">Ask me anything about Qayyum's portfolio</p>
                 </div>
               </div>
               <button
@@ -115,7 +115,7 @@ export default function AIChat() {
             {/* Disclaimer / Info */}
             <div className="px-6 py-3 text-sm text-gray-600 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-blue-900/20">
               <span role="alert">
-                <strong>💡 Smart Assistant:</strong> I have access to Talha's complete portfolio data including skills, education, certifications, projects, and blog posts. Ask me about his experience, technical skills, or any specific projects!
+                <strong>💡 Smart Assistant:</strong> I have access to Qayyum's complete portfolio data including skills, education, certifications, projects, and blog posts. Ask me about his experience, technical skills, or any specific projects!
               </span>
             </div>
 
@@ -170,7 +170,7 @@ export default function AIChat() {
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
                   onKeyPress={handleKeyPress}
-                  placeholder="Ask about Talha's skills, projects, education, or experience..."
+                  placeholder="Ask about Qayyum's skills, projects, education, or experience..."
                   disabled={isLoading}
                   className="flex-1 px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 disabled:opacity-50"
                 />
@@ -193,7 +193,7 @@ export default function AIChat() {
               <div className="mt-4 flex flex-wrap gap-2">
                 <span className="text-xs text-gray-500 dark:text-gray-400 mr-2">Quick questions:</span>
                 {[
-                  "What are Talha's main skills?",
+                  "What are Qayyum's main skills?",
                   "Tell me about his projects",
                   "What's his educational background?",
                   "What certifications does he have?"

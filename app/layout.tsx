@@ -10,13 +10,13 @@ import DataStatus from "@/components/DataStatus"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Talha - AI Developer & Portfolio",
-  description: "AI-powered portfolio showcasing projects, blog, and expertise in machine learning and web development.",
-  keywords: "AI, Machine Learning, Web Development, Portfolio, Blog",
-  authors: [{ name: "Talha" }],
+  title: "Qayyum Bokhari - AI & Robotics Developer",
+  description: "AI & Robotics portfolio showcasing projects and expertise in machine learning, robotics, and full-stack development.",
+  keywords: "AI, Machine Learning, Robotics, Web Development, Portfolio, Blog",
+  authors: [{ name: "Qayyum Bokhari" }],
   openGraph: {
-    title: "Talha - AI Developer & Portfolio",
-    description: "AI-powered portfolio showcasing projects and expertise",
+    title: "Qayyum Bokhari - AI & Robotics Developer",
+    description: "AI & Robotics portfolio showcasing projects and expertise",
     type: "website",
   },
     generator: 'v0.dev'

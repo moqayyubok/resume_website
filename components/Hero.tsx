@@ -26,7 +26,7 @@ export default function Hero() {
       <div className="max-w-4xl mx-auto px-4 text-center">
         <div className="mb-8">
           <div className="w-32 h-32 mx-auto mb-6 rounded-full bg-gradient-to-r from-blue-500 to-purple-600 flex items-center justify-center text-white text-4xl font-bold">
-            T
+            Q
           </div>
           <h1 className="text-5xl md:text-7xl font-bold mb-4">
             Hi, I'm <span className="text-blue-600 dark:text-blue-400">{personalInfo.name}</span>
@@ -41,7 +41,7 @@ export default function Hero() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
           <a
-            href="/TalhaAsherResume.pdf"
+            href="/Qayyum_Bokharicv.pdf"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2 hover:text-blue-100 hover:bg-blue-700 transition-colors"

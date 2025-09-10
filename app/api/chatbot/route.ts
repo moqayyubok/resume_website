@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { dataFetcher } from "@/lib/data-fetcher";
-import { personalInfo, skillCategories, projects, blogPosts } from "@/data/data";
+import { personalInfo, skillCategories, projects, blogPosts, educationData, certificationsData } from "@/data/data";
 
 export async function POST(req: Request) {
   try {
@@ -29,9 +29,9 @@ export async function POST(req: Request) {
       };
     }
 
-    // Create a comprehensive context about Talha's portfolio
+    // Create a comprehensive context about Qayyum's portfolio
     const portfolioContext = `
-You are Talha's AI assistant for his portfolio website. You have access to comprehensive information about Talha's background, skills, projects, education, and certifications. Use this information to answer questions accurately and helpfully.
+You are Qayyum's AI assistant for his portfolio website. You have access to comprehensive information about Qayyum's background, skills, projects, education, and certifications. Use this information to answer questions accurately and helpfully.
 
 PERSONAL INFORMATION:
 - Name: ${personalInfo.name}
@@ -50,14 +50,30 @@ ${portfolioData.skills.map(skill => `
 - ${skill.name} (${skill.category}) - ${skill.years_experience} years experience, Level: ${skill.level}/10
 `).join("")}
 
-EDUCATION (from live data):
+EDUCATION:
+${educationData.map(edu => `
+- ${edu.degree} from ${edu.institution}, ${edu.location}
+  Status: ${edu.status} (Expected graduation: ${edu.expectedGraduation})
+  Description: ${edu.description}
+  Key Highlights:
+${edu.highlights.map(highlight => `    • ${highlight}`).join('\n')}
+`).join("")}
+
+DATABASE EDUCATION (from live data):
 ${portfolioData.education.map(edu => `
 - ${edu.degree} in ${edu.field_of_study || 'N/A'} from ${edu.institution} (${edu.start_date} - ${edu.end_date || 'Present'})
   ${edu.description ? `Description: ${edu.description}` : ''}
   ${edu.grade ? `Grade: ${edu.grade}` : ''}
 `).join("")}
 
-CERTIFICATIONS (from live data):
+CERTIFICATIONS & CURRENT STUDIES:
+${certificationsData.map(cert => `
+- ${cert.name} (${cert.status})
+  Description: ${cert.description}
+  Skills: ${cert.skills.join(", ")}
+`).join("")}
+
+DATABASE CERTIFICATIONS (from live data):
 ${portfolioData.certifications.map(cert => `
 - ${cert.name} from ${cert.issuing_organization} (Issued: ${cert.issue_date})
   ${cert.description ? `Description: ${cert.description}` : ''}
@@ -80,12 +96,12 @@ ${portfolioData.blogPosts.slice(0, 3).map(post => `
 
 GUIDELINES:
 1. Answer questions based on the provided portfolio data
-2. Be helpful and informative about Talha's skills, experience, and projects
+2. Be helpful and informative about Qayyum's skills, experience, and projects
 3. If asked about contact information, provide the email: ${personalInfo.email}
 4. If asked about specific projects, provide details from the projects list
-5. For technical questions, reference Talha's relevant skills and experience
+5. For technical questions, reference Qayyum's relevant skills and experience
 6. Keep responses concise but informative
-7. If you don't have specific information, acknowledge it and suggest contacting Talha directly
+7. If you don't have specific information, acknowledge it and suggest contacting Qayyum directly
 8. Always maintain a professional and friendly tone
 9. Focus on publicly available information only - no private or sensitive data
 `;
@@ -100,7 +116,7 @@ GUIDELINES:
     ];
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://your-site-url.com";
-    const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Talha Portfolio";
+    const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Qayyum Portfolio";
     
     const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
       method: "POST",

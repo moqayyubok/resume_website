@@ -73,24 +73,24 @@ export const navLinks: NavLink[] = [
 
 // Personal Information
 export const personalInfo = {
-  name: "Talha",
-  title: "AI Developer & Machine Learning Engineer",
+  name: "Qayyum Bokhari",
+  title: "AI & Robotics Student | Full-Stack Developer",
   description:
-    "Passionate about building intelligent systems and creating innovative solutions using AI, machine learning, and modern web technologies.",
-  email: "talha.asher@talhaasher.co.uk",
-  resumeUrl: "/resume.pdf",
+    "Artificial Intelligence and Robotics student at Aston University with a proven ability to design and build complex applications that integrate advanced machine learning algorithms and full software ecosystems. I bring both technical expertise and entrepreneurial drive, capable of turning ideas into fully functional, scalable systems.",
+  email: "qayyumbokhari77@gmail.com",
+  resumeUrl: "/Qayyum_Bokharicv.pdf",
 }
 
 // Social Links
 export const socialLinks: SocialLink[] = [
   {
     icon: <Github className="w-6 h-6" />,
-    href: "https://github.com/talhaasher",
+    href: "https://github.com/moqayyubok",
     label: "GitHub",
   },
   {
     icon: <Linkedin className="w-6 h-6" />,
-    href: "https://www.linkedin.com/in/talhaasher/",
+    href: "https://www.linkedin.com/in/mohammad-bokhari-aa99701a6/",
     label: "LinkedIn",
   },
   {
@@ -126,32 +126,32 @@ export const skillCategories: SkillCategory[] = [
   {
     title: "AI & Machine Learning",
     icon: <Brain className="w-8 h-8" />,
-    skills: ["Python", "TensorFlow", "PyTorch", "Scikit-learn", "OpenCV", "NLP"],
+    skills: ["Python", "TensorFlow", "PyTorch", "Scikit-learn", "OpenCV", "NLP", "Computer Vision"],
   },
   {
-    title: "Web Development",
+    title: "Robotics & Hardware",
+    icon: <Cpu className="w-8 h-8" />,
+    skills: ["ROS", "Arduino", "Raspberry Pi", "Sensors", "Actuators", "Embedded Systems"],
+  },
+  {
+    title: "Full-Stack Development",
     icon: <Code className="w-8 h-8" />,
-    skills: ["React", "Next.js", "TypeScript", "Node.js", "Tailwind CSS", "API Development"],
+    skills: ["React", "Next.js", "Node.js", "TypeScript", "JavaScript", "REST APIs"],
   },
   {
-    title: "Data & Analytics",
+    title: "Data Science & Analytics",
     icon: <BarChart className="w-8 h-8" />,
-    skills: ["Pandas", "NumPy", "Matplotlib", "SQL", "Data Visualization", "Statistical Analysis"],
+    skills: ["Pandas", "NumPy", "Matplotlib", "Data Visualization", "Statistical Analysis", "Jupyter"],
   },
   {
     title: "Cloud & DevOps",
     icon: <Globe className="w-8 h-8" />,
-    skills: ["AWS", "Docker", "Git", "CI/CD", "Vercel", "MongoDB"],
+    skills: ["AWS", "Docker", "Git", "GitHub", "CI/CD", "Linux", "Version Control"],
   },
   {
-    title: "AI Frameworks",
-    icon: <Cpu className="w-8 h-8" />,
-    skills: ["Hugging Face", "LangChain", "OpenAI API", "Ollama", "Vector Databases", "RAG"],
-  },
-  {
-    title: "Databases",
+    title: "Databases & Tools",
     icon: <Database className="w-8 h-8" />,
-    skills: ["PostgreSQL", "MongoDB", "Redis", "Supabase", "Pinecone", "ChromaDB"],
+    skills: ["PostgreSQL", "MongoDB", "MySQL", "Firebase", "Supabase", "SQL"],
   },
 ]
 
@@ -196,7 +196,7 @@ export const blogPosts: BlogPost[] = [
     slug: "building-ai-spam-detector",
     readTime: "8 min read",
     category: "Machine Learning",
-    author: "Talha",
+    author: "Qayyum",
     content: `
 # Building My AI Spam Detector
 
@@ -311,7 +311,7 @@ This project demonstrates the practical application of machine learning in solvi
     slug: "getting-started-langchain",
     readTime: "12 min read",
     category: "AI Development",
-    author: "Talha",
+    author: "Qayyum",
     content: `
 # Getting Started with LangChain
 
@@ -350,7 +350,7 @@ This guide covers the fundamentals of building AI applications with LangChain an
     slug: "nextjs-15-features",
     readTime: "6 min read",
     category: "Web Development",
-    author: "Talha",
+    author: "Qayyum",
     content: `
 # Next.js 15 Features You Should Know
 
@@ -382,7 +382,7 @@ This overview covers the most important features and improvements in Next.js 15.
     slug: "vector-databases-ai",
     readTime: "10 min read",
     category: "AI Development",
-    author: "Talha",
+    author: "Qayyum",
     content: `
 # Vector Databases for AI Applications
 
@@ -417,7 +417,7 @@ This comprehensive guide covers everything you need to know about vector databas
     slug: "responsive-ui-tailwind",
     readTime: "7 min read",
     category: "Web Development",
-    author: "Talha",
+    author: "Qayyum",
     content: `
 # Building Responsive UIs with Tailwind CSS
 
@@ -447,6 +447,34 @@ Learn the best practices for building maintainable and scalable UIs with Tailwin
 // Blog Categories
 export const blogCategories = ["All", "Machine Learning", "AI Development", "Web Development"]
 
+// Education Data
+export const educationData = [
+  {
+    institution: "Aston University",
+    degree: "Bachelor of Science in Artificial Intelligence and Robotics",
+    location: "Birmingham, UK",
+    status: "Current Student",
+    expectedGraduation: "2027",
+    description: "Studying cutting-edge AI and robotics technologies, focusing on machine learning, computer vision, and autonomous systems.",
+    highlights: [
+      "Machine Learning and RAG (Retrieval-Augmented Generation) coursework",
+      "Experience with Design Factory Birmingham",
+      "Full-stack development projects using Laravel and Django frameworks",
+      "Integration of AI algorithms with robotics applications"
+    ]
+  }
+]
+
+// Certifications Data
+export const certificationsData = [
+  {
+    name: "Machine Learning Course (RAG)",
+    status: "Currently Pursuing",
+    description: "Advanced studies in Retrieval-Augmented Generation and machine learning applications",
+    skills: ["Machine Learning", "RAG", "AI Applications"]
+  }
+]
+
 // Statistics
 export const stats = [
   {
@@ -461,12 +489,12 @@ export const stats = [
 
 // AI Chat Responses
 export const aiChatResponses = [
-  "That's a great question! Talha specializes in AI and machine learning projects.",
-  "I'd be happy to tell you more about Talha's experience with web development and AI.",
-  "Talha has worked on various projects including spam detection and chatbot systems.",
-  "Feel free to check out the projects section to see Talha's latest work!",
-  "Talha is passionate about building intelligent systems and solving complex problems.",
-  "You can find more details about Talha's skills in the skills section above.",
+  "That's a great question! Qayyum specializes in AI, robotics and machine learning projects.",
+  "I'd be happy to tell you more about Qayyum's experience with robotics, AI and full-stack development.",
+  "Qayyum has worked on various projects integrating AI, robotics and full-stack development.",
+  "Feel free to check out the projects section to see Qayyum's latest work!",
+  "Qayyum is passionate about building intelligent systems, robotics applications and scalable solutions.",
+  "You can find more details about Qayyum's skills in the skills section above.",
 ]
 
 // Footer Links

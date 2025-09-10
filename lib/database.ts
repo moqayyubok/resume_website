@@ -1,14 +1,21 @@
 import { createClient } from "@supabase/supabase-js"
 import type { BlogPost, Project } from "@/data/data"
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co'
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'placeholder-key'
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || 'placeholder-service-key'
+
+// Check if Supabase is properly configured
+const isSupabaseConfigured = supabaseUrl !== 'https://placeholder.supabase.co' && 
+                             supabaseAnonKey !== 'placeholder-key'
 
 // Admin client with service role for backend operations
 // const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey)
 
 // Public client for frontend operations
-export const supabase = createClient(supabaseUrl, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!)
+export const supabase = isSupabaseConfigured ? 
+  createClient(supabaseUrl, supabaseAnonKey) : 
+  null
 
 // Types for new entities
 export interface Skill {
@@ -60,24 +67,34 @@ export interface Certification {
 class Database {
   // Blog Posts
   async getBlogPosts(): Promise<BlogPost[]> {
-    const { data, error } = await supabase
-      .from("blog_posts")
-      .select("*")
-      .eq("published", true)
-      .order("created_at", { ascending: false })
+    if (!supabase) {
+      // Return empty array if Supabase is not configured
+      return []
+    }
 
-    if (error) throw error
+    try {
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select("*")
+        .eq("published", true)
+        .order("created_at", { ascending: false })
 
-    return data.map((post) => ({
-      title: post.title,
-      slug: post.slug,
-      excerpt: post.excerpt,
-      content: post.content,
-      date: post.created_at.split("T")[0],
-      readTime: post.read_time || "5 min read",
-      category: post.category,
-      author: post.author || "Talha",
-    }))
+      if (error) throw error
+
+      return data.map((post) => ({
+        title: post.title,
+        slug: post.slug,
+        excerpt: post.excerpt,
+        content: post.content,
+        date: post.created_at.split("T")[0],
+        readTime: post.read_time || "5 min read",
+        category: post.category,
+        author: post.author || "Qayyum",
+      }))
+    } catch (error) {
+      console.error('Error fetching blog posts:', error)
+      return []
+    }
   }
 
   // async createBlogPost(post: Omit<BlogPost, "slug">): Promise<BlogPost> {
@@ -229,14 +246,23 @@ class Database {
 
   // Skills
   async getSkills(): Promise<Skill[]> {
-    const { data, error } = await supabase
-      .from("skills")
-      .select("*")
-      .order("category", { ascending: true })
-      .order("name", { ascending: true })
+    if (!supabase) {
+      return []
+    }
 
-    if (error) throw error
-    return data || []
+    try {
+      const { data, error } = await supabase
+        .from("skills")
+        .select("*")
+        .order("category", { ascending: true })
+        .order("name", { ascending: true })
+
+      if (error) throw error
+      return data || []
+    } catch (error) {
+      console.error('Error fetching skills:', error)
+      return []
+    }
   } 
 
   // async createSkill(skill: Omit<Skill, "id" | "created_at" | "updated_at">): Promise<Skill> {
@@ -265,10 +291,19 @@ class Database {
 
   // Education
   async getEducation(): Promise<Education[]> {
-    const { data, error } = await supabase.from("education").select("*").order("start_date", { ascending: false })
+    if (!supabase) {
+      return []
+    }
 
-    if (error) throw error
-    return data || []
+    try {
+      const { data, error } = await supabase.from("education").select("*").order("start_date", { ascending: false })
+
+      if (error) throw error
+      return data || []
+    } catch (error) {
+      console.error('Error fetching education:', error)
+      return []
+    }
   }
 
   // async createEducation(education: Omit<Education, "id" | "created_at" | "updated_at">): Promise<Education> {
@@ -297,13 +332,22 @@ class Database {
 
   // Certifications
   async getCertifications(): Promise<Certification[]> {
-    const { data, error } = await supabase
-      .from("certifications")
-      .select("*")
-      .order("issue_date", { ascending: false })
+    if (!supabase) {
+      return []
+    }
 
-    if (error) throw error
-    return data || []
+    try {
+      const { data, error } = await supabase
+        .from("certifications")
+        .select("*")
+        .order("issue_date", { ascending: false })
+
+      if (error) throw error
+      return data || []
+    } catch (error) {
+      console.error('Error fetching certifications:', error)
+      return []
+    }
   }
 
   // async createCertification(
@@ -334,10 +378,19 @@ class Database {
 
   // Personal Info
   async getPersonalInfo(): Promise<any> {
-    const { data, error } = await supabase.from("personal_info").select("*").single()
+    if (!supabase) {
+      return {}
+    }
 
-    if (error) return {}
-    return data || {}
+    try {
+      const { data, error } = await supabase.from("personal_info").select("*").single()
+
+      if (error) return {}
+      return data || {}
+    } catch (error) {
+      console.error('Error fetching personal info:', error)
+      return {}
+    }
   }
 
   // async savePersonalInfo(info: any): Promise<void> {

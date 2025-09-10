@@ -1,4 +1,5 @@
 import { stats } from "@/data/data"
+import Image from "next/image"
 
 export default function About() {
   return (
@@ -11,25 +12,28 @@ export default function About() {
 
         <div className="grid md:grid-cols-2 gap-12 items-center">
           <div>
-            <div className="w-full h-96 bg-gradient-to-br from-blue-400 to-purple-600 rounded-lg flex items-center justify-center text-white text-6xl font-bold">
-              AI
+            <div className="w-full h-96 rounded-lg overflow-hidden shadow-xl border-4 border-white dark:border-gray-700">
+              <Image 
+                src="/Mypicture.jpg" 
+                alt="Qayyum Bokhari" 
+                width={400} 
+                height={384}
+                className="w-full h-full object-contain object-center hover:scale-105 transition-transform duration-300"
+              />
             </div>
           </div>
 
           <div className="space-y-6">
             <h3 className="text-2xl font-semibold text-gray-800 dark:text-white">
-              Passionate AI Developer & Problem Solver
+              AI & Robotics Student | Full-Stack Developer
             </h3>
 
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-              I'm a dedicated AI developer with expertise in machine learning, deep learning, and modern web
-              technologies. My journey in technology started with a curiosity about how intelligent systems work, and it
-              has evolved into a passion for creating innovative solutions that make a real impact.
+              I'm an Artificial Intelligence and Robotics student at Aston University with a proven ability to design and build complex applications that integrate advanced machine learning algorithms and full software ecosystems.
             </p>
 
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-              With experience in Python, JavaScript, React, Next.js, and various AI frameworks, I enjoy building
-              end-to-end solutions that combine the power of artificial intelligence with intuitive user experiences.
+              My experience spans from developing end-to-end solutions with seamless integrations to working on real-world projects that combine AI, robotics, and modern application development. I bring both technical expertise and entrepreneurial drive, capable of turning ideas into fully functional, scalable systems.
             </p>
 
 

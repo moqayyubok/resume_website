@@ -1,0 +1,58 @@
+# Working Dockerfile for Qayyum's Portfolio
+FROM node:18-alpine AS base
+
+# Install dependencies only when needed
+FROM base AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+# Development stage
+FROM base AS dev
+WORKDIR /app
+RUN apk add --no-cache libc6-compat
+
+# Copy package files and install all dependencies
+COPY package*.json ./
+RUN npm install
+
+# Copy source code
+COPY . .
+
+# Expose port
+EXPOSE 3000
+
+# Start development server
+CMD ["npm", "run", "dev"]
+
+# Production stage
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# Copy package files
+COPY package*.json ./
+RUN npm ci --omit=dev
+
+# Copy source files
+COPY --chown=nextjs:nodejs . .
+
+# Build the application
+RUN npm run build
+
+# Set correct permissions
+RUN chown -R nextjs:nodejs /app
+USER nextjs
+
+EXPOSE 3000
+ENV PORT=3000
+
+CMD ["npm", "start"]
