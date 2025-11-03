@@ -251,7 +251,7 @@ The backend provides a robust API and data management layer:
 ### Key Features Implemented
 
 #### 1. Real-Time Inventory Tracking
-```javascript
+${'```'}javascript
 // Real-time inventory updates using WebSocket
 const updateInventory = (itemId, newQuantity) => {
   io.emit('inventoryUpdate', {
@@ -260,7 +260,7 @@ const updateInventory = (itemId, newQuantity) => {
     timestamp: new Date()
   });
 };
-```
+${'```'}
 
 #### 2. User Authentication System
 - Secure login/logout functionality
@@ -362,7 +362,7 @@ The UK version includes advanced reporting features:
 - **Export functionality** for accounting software integration
 
 #### Advanced Dashboard
-```javascript
+${'```'}javascript
 // Enhanced UK-specific dashboard metrics
 const ukDashboardMetrics = {
   totalValue: formatGBP(inventoryValue),
@@ -370,7 +370,7 @@ const ukDashboardMetrics = {
   profitMargin: calculateUKProfitMargin(sales, costs),
   compliance: checkHMRCCompliance(records)
 };
-```
+${'```'}
 
 ## Technical Enhancements
 
