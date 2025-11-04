@@ -76,8 +76,10 @@ export const personalInfo = {
   name: "Qayyum Bokhari",
   title: "AI and Software Engineer",
   description:
-    "Full-Stack Developer transitioning to AI Engineering with hands-on experience building production ML systems. Delivered 23% reduction in client return rates through predictive analytics and developed AI-powered applications using OpenAI API, Hugging Face Transformers, and Django. Currently pursuing BSc in AI & Robotics at Aston University while building intelligent web applications. Seeking junior AI engineer roles to combine software engineering expertise with machine learning implementation.",
+    "Full-Stack Developer transitioning to AI Engineering with hands-on experience building production ML systems. Delivered 23% reduction in client return rates through predictive analytics and developed AI-powered applications using OpenAI API, Hugging Face Transformers, and Django. Currently pursuing BSc in AI & Robotics at Aston University (2024-2027) while building intelligent web applications. Seeking junior AI engineer roles to combine software engineering expertise with machine learning implementation.",
   email: "qayyumbokhari77@gmail.com",
+  phone: "07743827727",
+  location: "406 Kingstanding Road, B448LD",
   resumeUrl: "/Qayyum_Bokharicv.pdf",
 }
 
@@ -90,7 +92,7 @@ export const socialLinks: SocialLink[] = [
   },
   {
     icon: <Linkedin className="w-6 h-6" />,
-    href: "https://www.linkedin.com/in/mohammad-bokhari-aa99701a6/",
+    href: "https://www.linkedin.com/in/mohammad-bokhari-aa99701a6",
     label: "LinkedIn",
   },
   {
@@ -158,40 +160,31 @@ export const skillCategories: SkillCategory[] = [
 // Projects Data
 export const projects: Project[] = [
   {
-    title: "DF Baston Inventory System",
-    description: "Full-stack inventory management system with real-time tracking, user authentication, and comprehensive dashboard analytics.",
-    tech: ["React", "Node.js", "Express", "MongoDB", "JWT", "Chart.js"],
-    icon: <Database className="w-8 h-8" />,
+    title: "AI-Powered CV Chatbot",
+    description: "Intelligent chatbot using Retrieval-Augmented Generation (RAG) architecture to provide context-aware responses about CV content. Integrated OpenAI GPT-3.5 API and Llama 2 via Hugging Face Transformers. Achieved 92% response accuracy with FAISS vector database.",
+    tech: ["Python", "Django", "OpenAI API", "Hugging Face", "FAISS", "AWS EC2", "Docker"],
+    icon: <Brain className="w-8 h-8" />,
     github: "https://github.com/moqayyubok",
-    demo: "https://dfbastoninventory.xyz/",
+    demo: "https://royaltap.shop/",
     featured: true,
   },
   {
     title: "DF Baston Inventory UK",
-    description: "UK-specific version of the inventory system with enhanced features, localized settings, and advanced reporting capabilities.",
-    tech: ["React", "Node.js", "Express", "MongoDB", "JWT", "Analytics"],
-    icon: <Globe className="w-8 h-8" />,
+    description: "Comprehensive inventory management system with real-time tracking, reducing stock discrepancies by 45% and saving 12 hours/week in manual processes. Implemented RESTful APIs and JWT authentication.",
+    tech: ["Django", "Laravel", "PostgreSQL", "MySQL", "Redis", "Docker", "CI/CD"],
+    icon: <Database className="w-8 h-8" />,
     github: "https://github.com/moqayyubok",
     demo: "https://www.dfbastoninventory.co.uk/",
     featured: true,
   },
   {
-    title: "AI Spam Detector",
-    description: "Advanced email spam detection system using machine learning algorithms with 95% accuracy rate.",
-    tech: ["Python", "XGBoost", "NLP", "Flask", "React"],
-    icon: <Shield className="w-8 h-8" />,
-    github: "https://github.com",
-    demo: "https://demo.com",
+    title: "Retro App - Team Collaboration Platform",
+    description: "Secure team collaboration application enabling cross-functional teams to work together. Optimized database queries and implemented Redis caching, improving response time by 60% (2.1s → 0.8s).",
+    tech: ["Django", "PostgreSQL", "Redis", "JWT", "REST API", "Docker"],
+    icon: <Code className="w-8 h-8" />,
+    github: "https://github.com/moqayyubok",
+    demo: "#",
     featured: true,
-  },
-  {
-    title: "Smart Chatbot Assistant",
-    description: "Intelligent conversational AI powered by large language models with context awareness.",
-    tech: ["OpenAI API", "LangChain", "Next.js", "Vector DB"],
-    icon: <MessageSquare className="w-8 h-8" />,
-    github: "https://github.com",
-    demo: "https://demo.com",
-    featured: false,
   },
   {
     title: "AI Content Generator",
