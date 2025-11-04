@@ -74,11 +74,11 @@ export const navLinks: NavLink[] = [
 // Personal Information
 export const personalInfo = {
   name: "Qayyum Bokhari",
-  title: "AI & Robotics Student | Business Analyst | Automation Specialist",
+  title: "AI and Software Engineer",
   description:
-    "Artificial Intelligence and Robotics student at Aston University with expertise in business analysis, process optimization, and AI-powered automation. I translate business requirements into technical solutions, analyze workflows for improvement opportunities, and develop intelligent systems that drive efficiency. Proficient in Python, SQL, data analytics tools (Excel, Power BI), and automation platforms (Power Automate, Zapier). Passionate about leveraging emerging AI technologies to solve real business challenges.",
+    "Full-Stack Developer transitioning to AI Engineering with hands-on experience building production ML systems. Delivered 23% reduction in client return rates through predictive analytics and developed AI-powered applications using OpenAI API, Hugging Face Transformers, and Django. Currently pursuing BSc in AI & Robotics at Aston University while building intelligent web applications. Seeking junior AI engineer roles to combine software engineering expertise with machine learning implementation.",
   email: "qayyumbokhari77@gmail.com",
-  resumeUrl: "/Qayyum_Bokhari_CV.pdf",
+  resumeUrl: "/Qayyum_Bokharicv.pdf",
 }
 
 // Social Links
@@ -124,34 +124,34 @@ export const contactInfo: ContactInfo[] = [
 // Skills Data
 export const skillCategories: SkillCategory[] = [
   {
-    title: "Business Analysis & Requirements",
-    icon: <MessageSquare className="w-8 h-8" />,
-    skills: ["Requirements Gathering", "Process Analysis", "BRD Documentation", "Stakeholder Management", "Workflow Optimization", "Agile Methodology"],
-  },
-  {
-    title: "AI & Automation Tools",
-    icon: <Brain className="w-8 h-8" />,
-    skills: ["Python", "Power Automate", "Zapier", "Make.com", "AI Agents", "Process Mining", "Workflow Automation"],
-  },
-  {
-    title: "Data Analysis & Visualization",
-    icon: <BarChart className="w-8 h-8" />,
-    skills: ["Excel", "Power BI", "Google Sheets", "Pandas", "NumPy", "Statistical Analysis", "Data-Driven Decision Making"],
-  },
-  {
-    title: "Technical Skills",
+    title: "Core Languages",
     icon: <Code className="w-8 h-8" />,
-    skills: ["Python", "SQL", "JavaScript", "TypeScript", "Git", "JIRA", "Confluence"],
+    skills: ["Python", "JavaScript (ES6+)", "PHP", "SQL", "HTML5", "CSS3"],
   },
   {
-    title: "AI & Machine Learning",
-    icon: <Cpu className="w-8 h-8" />,
-    skills: ["TensorFlow", "PyTorch", "Scikit-learn", "OpenCV", "NLP", "Computer Vision", "Machine Learning"],
-  },
-  {
-    title: "Cloud & Databases",
+    title: "Backend Frameworks",
     icon: <Database className="w-8 h-8" />,
-    skills: ["AWS", "PostgreSQL", "MongoDB", "MySQL", "Firebase", "Docker"],
+    skills: ["Django", "Flask", "Laravel", "Node.js"],
+  },
+  {
+    title: "Frontend",
+    icon: <Globe className="w-8 h-8" />,
+    skills: ["React", "jQuery", "Bootstrap", "Tailwind CSS"],
+  },
+  {
+    title: "AI/ML",
+    icon: <Brain className="w-8 h-8" />,
+    skills: ["TensorFlow", "Hugging Face Transformers", "OpenAI API", "Scikit-learn"],
+  },
+  {
+    title: "Databases",
+    icon: <Database className="w-8 h-8" />,
+    skills: ["PostgreSQL", "MySQL", "MongoDB", "SQLite"],
+  },
+  {
+    title: "DevOps & Cloud",
+    icon: <Shield className="w-8 h-8" />,
+    skills: ["Docker", "Git", "GitHub", "CI/CD", "Jenkins", "Linux", "AWS (EC2, S3, RDS)", "Vercel", "Heroku"],
   },
 ]
 

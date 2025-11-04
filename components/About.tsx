@@ -25,15 +25,15 @@ export default function About() {
 
           <div className="space-y-6">
             <h3 className="text-2xl font-semibold text-gray-800 dark:text-white">
-              AI & Robotics Student | Business Analyst | Automation Specialist
+              AI and Software Engineer
             </h3>
 
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-              I'm an Artificial Intelligence and Robotics student at Aston University with a passion for translating business needs into intelligent automation solutions. I combine technical expertise in Python, data analysis, and AI with strong analytical and problem-solving skills.
+              Full-Stack Developer transitioning to AI Engineering with hands-on experience building production ML systems. Delivered 23% reduction in client return rates through predictive analytics and developed AI-powered applications using OpenAI API, Hugging Face Transformers, and Django.
             </p>
 
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-              My experience spans process analysis, workflow optimization, and developing AI-powered automation systems. I excel at bridging the gap between business stakeholders and technical teams, delivering data-driven insights that improve efficiency and reduce costs. I'm particularly interested in leveraging emerging technologies to transform business operations.
+              Currently pursuing BSc in AI & Robotics at Aston University while building intelligent web applications. Seeking junior AI engineer roles to combine software engineering expertise with machine learning implementation.
             </p>
 
             <div className="flex gap-4 mt-6">
