@@ -25,16 +25,32 @@ export default function About() {
 
           <div className="space-y-6">
             <h3 className="text-2xl font-semibold text-gray-800 dark:text-white">
-              AI & Robotics Student | Full-Stack Developer
+              AI & Robotics Student | Business Analyst | Automation Specialist
             </h3>
 
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-              I'm an Artificial Intelligence and Robotics student at Aston University with a proven ability to design and build complex applications that integrate advanced machine learning algorithms and full software ecosystems.
+              I'm an Artificial Intelligence and Robotics student at Aston University with a passion for translating business needs into intelligent automation solutions. I combine technical expertise in Python, data analysis, and AI with strong analytical and problem-solving skills.
             </p>
 
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-              My experience spans from developing end-to-end solutions with seamless integrations to working on real-world projects that combine AI, robotics, and modern application development. I bring both technical expertise and entrepreneurial drive, capable of turning ideas into fully functional, scalable systems.
+              My experience spans process analysis, workflow optimization, and developing AI-powered automation systems. I excel at bridging the gap between business stakeholders and technical teams, delivering data-driven insights that improve efficiency and reduce costs. I'm particularly interested in leveraging emerging technologies to transform business operations.
             </p>
+
+            <div className="flex gap-4 mt-6">
+              <a
+                href="/Qayyum_Bokhari_CV.pdf"
+                download
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+              >
+                Download CV
+              </a>
+              <a
+                href="#contact"
+                className="px-6 py-3 border-2 border-blue-600 text-blue-600 dark:text-blue-400 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors font-semibold"
+              >
+                Get in Touch
+              </a>
+            </div>
 
 
           </div>

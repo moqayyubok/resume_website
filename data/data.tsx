@@ -74,11 +74,11 @@ export const navLinks: NavLink[] = [
 // Personal Information
 export const personalInfo = {
   name: "Qayyum Bokhari",
-  title: "AI & Robotics Student | Full-Stack Developer",
+  title: "AI & Robotics Student | Business Analyst | Automation Specialist",
   description:
-    "Artificial Intelligence and Robotics student at Aston University with a proven ability to design and build complex applications that integrate advanced machine learning algorithms and full software ecosystems. I bring both technical expertise and entrepreneurial drive, capable of turning ideas into fully functional, scalable systems.",
+    "Artificial Intelligence and Robotics student at Aston University with expertise in business analysis, process optimization, and AI-powered automation. I translate business requirements into technical solutions, analyze workflows for improvement opportunities, and develop intelligent systems that drive efficiency. Proficient in Python, SQL, data analytics tools (Excel, Power BI), and automation platforms (Power Automate, Zapier). Passionate about leveraging emerging AI technologies to solve real business challenges.",
   email: "qayyumbokhari77@gmail.com",
-  resumeUrl: "/Qayyum_Bokharicv.pdf",
+  resumeUrl: "/Qayyum_Bokhari_CV.pdf",
 }
 
 // Social Links
@@ -124,34 +124,34 @@ export const contactInfo: ContactInfo[] = [
 // Skills Data
 export const skillCategories: SkillCategory[] = [
   {
-    title: "AI & Machine Learning",
+    title: "Business Analysis & Requirements",
+    icon: <MessageSquare className="w-8 h-8" />,
+    skills: ["Requirements Gathering", "Process Analysis", "BRD Documentation", "Stakeholder Management", "Workflow Optimization", "Agile Methodology"],
+  },
+  {
+    title: "AI & Automation Tools",
     icon: <Brain className="w-8 h-8" />,
-    skills: ["Python", "TensorFlow", "PyTorch", "Scikit-learn", "OpenCV", "NLP", "Computer Vision"],
+    skills: ["Python", "Power Automate", "Zapier", "Make.com", "AI Agents", "Process Mining", "Workflow Automation"],
   },
   {
-    title: "Robotics & Hardware",
-    icon: <Cpu className="w-8 h-8" />,
-    skills: ["ROS", "Arduino", "Raspberry Pi", "Sensors", "Actuators", "Embedded Systems"],
-  },
-  {
-    title: "Full-Stack Development",
-    icon: <Code className="w-8 h-8" />,
-    skills: ["React", "Next.js", "Node.js", "TypeScript", "JavaScript", "REST APIs"],
-  },
-  {
-    title: "Data Science & Analytics",
+    title: "Data Analysis & Visualization",
     icon: <BarChart className="w-8 h-8" />,
-    skills: ["Pandas", "NumPy", "Matplotlib", "Data Visualization", "Statistical Analysis", "Jupyter"],
+    skills: ["Excel", "Power BI", "Google Sheets", "Pandas", "NumPy", "Statistical Analysis", "Data-Driven Decision Making"],
   },
   {
-    title: "Cloud & DevOps",
-    icon: <Globe className="w-8 h-8" />,
-    skills: ["AWS", "Docker", "Git", "GitHub", "CI/CD", "Linux", "Version Control"],
+    title: "Technical Skills",
+    icon: <Code className="w-8 h-8" />,
+    skills: ["Python", "SQL", "JavaScript", "TypeScript", "Git", "JIRA", "Confluence"],
   },
   {
-    title: "Databases & Tools",
+    title: "AI & Machine Learning",
+    icon: <Cpu className="w-8 h-8" />,
+    skills: ["TensorFlow", "PyTorch", "Scikit-learn", "OpenCV", "NLP", "Computer Vision", "Machine Learning"],
+  },
+  {
+    title: "Cloud & Databases",
     icon: <Database className="w-8 h-8" />,
-    skills: ["PostgreSQL", "MongoDB", "MySQL", "Firebase", "Supabase", "SQL"],
+    skills: ["AWS", "PostgreSQL", "MongoDB", "MySQL", "Firebase", "Docker"],
   },
 ]
 
