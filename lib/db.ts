@@ -130,6 +130,28 @@ class JsonDB {
   async savePersonalInfo(info: any): Promise<void> {
     await this.writeFile("personal-info", [info])
   }
+
+  // Contact Messages
+  async getContactMessages(): Promise<any[]> {
+    return this.readFile<any>("contact-messages")
+  }
+
+  async saveContactMessages(messages: any[]): Promise<void> {
+    await this.writeFile("contact-messages", messages)
+  }
+
+  async createContactMessage(message: any): Promise<any> {
+    const messages = await this.getContactMessages()
+    const newMessage = {
+      ...message,
+      id: Date.now().toString(),
+      timestamp: new Date().toISOString(),
+      read: false,
+    }
+    messages.push(newMessage)
+    await this.saveContactMessages(messages)
+    return newMessage
+  }
 }
 
 export const db = new JsonDB()

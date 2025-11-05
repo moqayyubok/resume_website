@@ -38,7 +38,7 @@ export default function About() {
 
             <div className="flex gap-4 mt-6">
               <a
-                href="/Qayyum_Bokhari_CV.pdf"
+                href="/Qayyum_Bokharicv.pdf"
                 download
                 className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold"
               >
