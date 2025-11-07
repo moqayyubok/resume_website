@@ -31,8 +31,10 @@ export default function Skills() {
   )
 
   const getSkillLevelText = (level: number) => {
-    const levels = ["Beginner", "Novice", "Intermediate", "Advanced", "Expert"]
-    return levels[level - 1] || "Intermediate"
+    if (level <= 4) return "Learning"
+    if (level <= 6) return "Intermediate"
+    if (level <= 8) return "Proficient"
+    return "Expert"
   }
 
   const getSkillColor = (color: string) => {
@@ -123,42 +125,32 @@ export default function Skills() {
                 {category}
               </h3>
 
-              <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
                 {categorySkills.map((skill) => (
                   <div
                     key={skill.id}
-                    className={`p-4 rounded-lg border-2 transition-all hover:shadow-md ${
-                      skill.is_featured
-                        ? "border-blue-200 dark:border-blue-800 bg-blue-50 dark:bg-blue-900/20"
-                        : "border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800"
-                    }`}
+                    className="group relative p-4 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 transition-all hover:shadow-md"
                   >
-                    <div className="flex items-center justify-between mb-3">
-                      <div className="flex items-center">
-                        <h4 className="font-semibold text-gray-800 dark:text-white">{skill.name}</h4>
-                        {skill.is_featured && <Star className="w-4 h-4 ml-2 text-yellow-500 fill-current" />}
-                      </div>
-                      <span className={`px-2 py-1 text-xs rounded-full ${getSkillColor(skill.color || "blue")}`}>
+                    <div className="flex items-start justify-between mb-2">
+                      <h4 className="font-medium text-gray-900 dark:text-white text-sm">{skill.name}</h4>
+                      {skill.is_featured && <Star className="w-3 h-3 text-yellow-500 fill-current flex-shrink-0" />}
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-gray-600 dark:text-gray-400">
+                        {skill.years_experience}yr{skill.years_experience !== 1 ? "s" : ""}
+                      </span>
+                      <span className={`px-2 py-0.5 rounded font-medium ${
+                        skill.level <= 4
+                          ? "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-400"
+                          : skill.level <= 6
+                          ? "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400"
+                          : skill.level <= 8
+                          ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                          : "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400"
+                      }`}>
                         {getSkillLevelText(skill.level)}
                       </span>
-                    </div>
-
-                    {/* Skill Level Bar */}
-                    <div className="mb-3">
-                      <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-1">
-                        <span>Proficiency</span>
-                        <span>{skill.level}/5</span>
-                      </div>
-                      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                        <div
-                          className="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                          style={{ width: `${(skill.level / 5) * 100}%` }}
-                        ></div>
-                      </div>
-                    </div>
-
-                    <div className="text-sm text-gray-600 dark:text-gray-400">
-                      {skill.years_experience} year{skill.years_experience !== 1 ? "s" : ""} experience
                     </div>
                   </div>
                 ))}
