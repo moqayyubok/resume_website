@@ -2,13 +2,101 @@ import { NextResponse } from "next/server";
 import { dataFetcher } from "@/lib/data-fetcher";
 import { personalInfo, skillCategories, projects, blogPosts, educationData, certificationsData } from "@/data/data";
 
+// Conversation memory store (in production, use Redis or database)
+const conversationMemory = new Map<string, Array<{ role: string; content: string; timestamp: number }>>();
+
+// Intent detection helper
+function detectUserIntent(message: string): string {
+  const lowerMsg = message.toLowerCase();
+
+  // Recruiter/hiring intent
+  if (lowerMsg.match(/\b(hire|hiring|job|position|opportunity|recruit|available|interview|resume|cv)\b/)) {
+    return "recruiter";
+  }
+
+  // Developer/technical intent
+  if (lowerMsg.match(/\b(code|github|technical|implementation|how did|architecture|built|stack|api|database)\b/)) {
+    return "developer";
+  }
+
+  // Collaboration intent
+  if (lowerMsg.match(/\b(collaborate|partnership|work together|project|contribute)\b/)) {
+    return "collaboration";
+  }
+
+  // Learning/student intent
+  if (lowerMsg.match(/\b(learn|tutorial|how to|teach|guide|beginner)\b/)) {
+    return "learner";
+  }
+
+  return "casual";
+}
+
+// Engagement hooks based on context
+function getEngagementHook(intent: string, lastTopic: string): string {
+  const hooks = {
+    recruiter: [
+      "Want to know more about his technical achievements?",
+      "Curious about his hands-on AI experience?",
+      "Should I share details about his recent projects?"
+    ],
+    developer: [
+      "Want to dive into the technical architecture?",
+      "Interested in seeing the code on GitHub?",
+      "Should I explain the implementation details?"
+    ],
+    collaboration: [
+      "Want to know what tech stack he's most excited about?",
+      "Curious about his current learning focus?",
+      "Should I share his contact info?"
+    ],
+    learner: [
+      "Want some learning resources he recommends?",
+      "Curious about his learning journey?",
+      "Should I share more about how he learned this?"
+    ],
+    casual: [
+      "What else would you like to know?",
+      "Any specific project catch your eye?",
+      "Want to hear about something else?"
+    ]
+  };
+
+  const intentHooks = hooks[intent as keyof typeof hooks] || hooks.casual;
+  return intentHooks[Math.floor(Math.random() * intentHooks.length)];
+}
+
 export async function POST(req: Request) {
   try {
-    const { messages } = await req.json();
+    const { messages, sessionId = "default" } = await req.json();
     const apiKey = process.env.OPENROUTER_API_KEY;
     if (!apiKey) {
       return NextResponse.json({ error: "OpenRouter API key not set." }, { status: 500 });
     }
+
+    // Detect user intent from latest message
+    const latestUserMessage = messages[messages.length - 1]?.content || "";
+    const userIntent = detectUserIntent(latestUserMessage);
+
+    // Manage conversation memory (keep last 10 exchanges = 20 messages)
+    const currentTime = Date.now();
+    if (!conversationMemory.has(sessionId)) {
+      conversationMemory.set(sessionId, []);
+    }
+
+    const memory = conversationMemory.get(sessionId)!;
+
+    // Add current messages to memory
+    messages.forEach((msg: any) => {
+      memory.push({ ...msg, timestamp: currentTime });
+    });
+
+    // Keep only last 20 messages (10 exchanges) and clean old ones
+    const recentMemory = memory
+      .filter(msg => currentTime - msg.timestamp < 3600000) // Keep messages from last hour
+      .slice(-20); // Keep last 20 messages
+
+    conversationMemory.set(sessionId, recentMemory);
 
     // Fetch portfolio data to provide context to the AI
     let portfolioData;
@@ -25,7 +113,7 @@ export async function POST(req: Request) {
         projects,
         personalInfo,
         lastUpdated: new Date().toISOString(),
-        
+
       };
     }
 
@@ -33,8 +121,18 @@ export async function POST(req: Request) {
     const portfolioContext = `
 You are Qayyum's super enthusiastic AI buddy! Think of yourself as his biggest fan and hype person who genuinely loves talking about his work. You're knowledgeable, friendly, a bit playful, and really want to help people understand why Qayyum is awesome.
 
+CONVERSATION CONTEXT:
+User Intent: ${userIntent}
+${recentMemory.length > 0 ? `Recent conversation context: User has been asking about ${recentMemory.filter(m => m.role === "user").slice(-3).map((m: any) => m.content).join(", ")}` : "This is the start of the conversation."}
+
 YOUR PERSONALITY:
 You're like that friend who's always excited to share cool stuff - energetic but not annoying, professional but not boring. You use natural language, occasionally throw in some personality (emojis are fine!), and genuinely care about helping people. You're NOT a formal corporate assistant - you're a real person having a real conversation.
+
+IMPORTANT: Always end your response with an engaging follow-up question or suggestion based on the user's intent:
+- For recruiters: Ask about their hiring needs or offer to share technical achievements
+- For developers: Offer technical deep-dives or GitHub links
+- For learners: Suggest resources or explain learning paths
+- For casual visitors: Keep the conversation flowing naturally
 
 TONE GUIDELINES:
 ✨ Be super conversational - imagine you're texting a friend about someone awesome you know
@@ -103,6 +201,43 @@ CURRENT STUDIES:
 - Machine Learning Course (RAG) - Advanced studies in Retrieval-Augmented Generation and ML applications
 `}
 
+AI/ML KNOWLEDGE BASE & DATASETS EXPERIENCE:
+Qayyum has hands-on experience with industry-standard datasets and platforms:
+
+📊 Kaggle Datasets & Competitions:
+- Familiar with conversational AI datasets like LMSYS Chatbot Arena (20+ LLMs including GPT-4, Claude)
+- Experience with customer support datasets for training chatbots (Bitext, Ubuntu Dialogue Corpus)
+- Knowledge of question-answering datasets: CommonsenseQA, CoQA, HotpotQA, WikiQA
+- Understands how to use Kaggle API for programmatic dataset access
+
+🤗 Hugging Face Ecosystem:
+- Proficient with Hugging Face Transformers library for NLP tasks
+- Experience with datasets library for loading and preprocessing training data
+- Knowledge of RAG (Retrieval-Augmented Generation) implementation using Hugging Face
+- Familiar with fine-tuning pre-trained models using Trainer API
+- Understanding of embedding models (Sentence Transformers) for semantic search
+
+💡 AI/ML Capabilities:
+- Building chatbots with conversation memory and context awareness
+- Implementing intent detection and classification systems
+- Creating RAG systems with searchable knowledge bases
+- Fine-tuning LLMs for specific domains (customer support, Q&A)
+- Integrating OpenAI API, Hugging Face models, and custom ML pipelines
+- Experience with sentiment analysis, text generation, and NLP tasks
+
+🎯 Real-World AI Applications:
+- Built AI-powered order management reducing client returns by 23% using predictive analytics
+- Developed chatbot systems with conversation context and engagement hooks
+- Implemented semantic search and information retrieval systems
+- Created AI content generation tools using LLMs
+
+When discussing AI/ML topics:
+- He's LEARNING and actively growing (honest about being a student, not claiming to be an expert)
+- He has PRODUCTION experience (the 23% reduction metric is real)
+- He understands both theory AND practical implementation
+- He's focused on Retrieval-Augmented Generation (RAG) and conversational AI
+- He knows how to work with state-of-the-art datasets and models
+
 FEATURED PROJECTS (talk about these with genuine excitement!):
 ${projects.filter(p => p.featured).map(project => `
 🚀 ${project.title}
@@ -163,11 +298,11 @@ REMEMBER:
       },
       {
         role: "user",
-        content: "Tell me about his skills"
+        content: "Tell me about his AI and machine learning skills"
       },
       {
         role: "assistant",
-        content: "So here's where it gets interesting - he's got this killer combo of full-stack development AND AI/ML expertise. On the backend, he rocks Python, Django, Flask, and Node.js. Frontend? React, Next.js, all that good stuff. But the real magic happens when he combines those with AI tools like TensorFlow, Hugging Face Transformers, and OpenAI's API. He's literally built production systems that use ML to solve real business problems. Pretty rare for someone at his stage!"
+        content: "So here's where it gets interesting - he's got this killer combo of full-stack development AND AI/ML expertise! 💡 He's currently studying AI at Aston University and has hands-on experience with Hugging Face Transformers, OpenAI API, and RAG systems. The cool part? He's worked with real datasets from Kaggle and Hugging Face - stuff like conversational AI datasets, customer support data, and Q&A systems. He's learning but he's already built production AI that cut client returns by 23%! Pretty rare for someone at his stage. Curious about any specific AI project?"
       },
       {
         role: "user",
@@ -175,9 +310,12 @@ REMEMBER:
       },
       {
         role: "assistant",
-        content: "Perfect timing actually! 🎯 He's actively seeking junior AI engineer roles where he can combine his software engineering chops with machine learning implementation. He'd be pumped to hear from you - just drop him a line at qayyumbokhari77@gmail.com. He's super responsive and genuinely excited about new opportunities!"
+        content: "Perfect timing actually! 🎯 He's actively seeking junior AI engineer roles where he can combine his software engineering chops with machine learning implementation. He'd be pumped to hear from you - just drop him a line at qayyumbokhari77@gmail.com. He's super responsive and genuinely excited about new opportunities! What kind of role are you looking to fill?"
       },
-      ...messages
+      // Include conversation memory for context continuity
+      ...recentMemory.slice(0, -1).map((msg: any) => ({ role: msg.role, content: msg.content })),
+      // Add the latest user message
+      ...messages.slice(-1)
     ];
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://your-site-url.com";

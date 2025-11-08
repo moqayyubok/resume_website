@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useRef } from "react"
 import { MessageCircle, X, Send, Bot, Loader2 } from "lucide-react"
 
 export default function AIChat() {
@@ -13,6 +13,14 @@ export default function AIChat() {
   ])
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
+  const sessionIdRef = useRef<string>("")
+
+  // Generate a unique session ID for conversation memory
+  useEffect(() => {
+    if (!sessionIdRef.current) {
+      sessionIdRef.current = `session-${Date.now()}-${Math.random().toString(36).substring(7)}`
+    }
+  }, [])
 
   // Function to clean asterisks and format text for web display
   const cleanResponse = (text: string) => {
@@ -35,7 +43,10 @@ export default function AIChat() {
       const res = await fetch("/api/chatbot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ messages: [...messages, userMessage] }),
+        body: JSON.stringify({
+          messages: [...messages, userMessage],
+          sessionId: sessionIdRef.current
+        }),
       });
 
       if (!res.ok) {
