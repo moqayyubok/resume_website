@@ -16,7 +16,9 @@ export async function POST(request: NextRequest) {
     }
 
     const transporter = nodemailer.createTransport({
-      service: "gmail",
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.GMAIL_USER,
         pass: process.env.GMAIL_APP_PASSWORD,
@@ -40,7 +42,12 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, message: "Message sent successfully!" }, { status: 200 })
   } catch (error) {
-    console.error("Contact form error:", error)
-    return NextResponse.json({ error: "Failed to send message. Please try again later." }, { status: 500 })
+    const err = error as Error
+    console.error("Contact form error:", err)
+    // Temporarily expose error detail for debugging
+    return NextResponse.json(
+      { error: "Failed to send message.", detail: err.message },
+      { status: 500 }
+    )
   }
 }
