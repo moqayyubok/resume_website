@@ -4,22 +4,38 @@ import { useState, useEffect } from "react"
 import { ChevronDown, Download } from "lucide-react"
 import { personalInfo, socialLinks } from "@/data/data"
 
+const PHRASES = [
+  "Full Stack Developer",
+  "AI Tinkerer",
+  "Problem Solver",
+  "Self-Taught Builder",
+]
+
 export default function Hero() {
   const [text, setText] = useState("")
-  const fullText = personalInfo.title
+  const [phraseIndex, setPhraseIndex] = useState(0)
+  const [deleting, setDeleting] = useState(false)
 
   useEffect(() => {
-    let index = 0
-    const timer = setInterval(() => {
-      setText(fullText.slice(0, index))
-      index++
-      if (index > fullText.length) {
-        clearInterval(timer)
-      }
-    }, 100)
+    const current = PHRASES[phraseIndex]
 
-    return () => clearInterval(timer)
-  }, [])
+    if (!deleting && text === current) {
+      const t = setTimeout(() => setDeleting(true), 2000)
+      return () => clearTimeout(t)
+    }
+
+    if (deleting && text === "") {
+      setDeleting(false)
+      setPhraseIndex((i) => (i + 1) % PHRASES.length)
+      return
+    }
+
+    const t = setTimeout(
+      () => setText(deleting ? current.slice(0, text.length - 1) : current.slice(0, text.length + 1)),
+      deleting ? 45 : 95,
+    )
+    return () => clearTimeout(t)
+  }, [text, deleting, phraseIndex])
 
   return (
     <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800 pt-16">
@@ -29,7 +45,7 @@ export default function Hero() {
             Q
           </div>
           <h1 className="text-5xl md:text-7xl font-bold mb-4">
-            Hi, I'm <span className="text-blue-600 dark:text-blue-400">{personalInfo.name}</span>
+            Hi, I&apos;m <span className="text-blue-600 dark:text-blue-400">{personalInfo.name}</span>
           </h1>
           <div className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 h-8">
             {text}
@@ -37,14 +53,16 @@ export default function Hero() {
           </div>
         </div>
 
-        <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">{personalInfo.description}</p>
+        <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
+          I build things that work. Full stack developer, AI tinkerer, problem solver.
+        </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
           <a
             href="/Qayyum_Bokharicv.pdf"
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2 hover:text-blue-100 hover:bg-blue-700 transition-colors"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2"
           >
             <Download className="w-5 h-5" />
             Download Resume

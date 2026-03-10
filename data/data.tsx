@@ -30,6 +30,8 @@ export interface BlogPost {
 export interface Project {
   title: string
   description: string
+  problem?: string
+  result?: string
   tech: string[]
   icon: React.ReactNode
   github: string
@@ -161,7 +163,9 @@ export const skillCategories: SkillCategory[] = [
 export const projects: Project[] = [
   {
     title: "AI-Powered CV Chatbot",
-    description: "Intelligent chatbot using Retrieval-Augmented Generation (RAG) architecture to provide context-aware responses about CV content. Integrated OpenAI GPT-3.5 API and Llama 2 via Hugging Face Transformers. Achieved 92% response accuracy with FAISS vector database.",
+    description: "Intelligent chatbot using Retrieval-Augmented Generation (RAG) architecture to provide context-aware responses about CV content. Integrated OpenAI GPT-3.5 API and Llama 2 via Hugging Face Transformers.",
+    problem: "Standard LLMs hallucinate when answering questions about specific CV details — confident, wrong answers.",
+    result: "92% response accuracy using RAG + FAISS vector search to ground every answer in real CV data.",
     tech: ["Python", "Django", "OpenAI API", "Hugging Face", "FAISS", "AWS EC2", "Docker"],
     icon: <Brain className="w-8 h-8" />,
     github: "https://github.com/moqayyubok",
@@ -170,7 +174,9 @@ export const projects: Project[] = [
   },
   {
     title: "DF Baston Inventory UK",
-    description: "Comprehensive inventory management system with real-time tracking, reducing stock discrepancies by 45% and saving 12 hours/week in manual processes. Implemented RESTful APIs and JWT authentication.",
+    description: "Comprehensive inventory management system with real-time tracking, RESTful APIs, JWT authentication, and Redis caching. Built for a live UK business with daily active users.",
+    problem: "Manual spreadsheet-based stock tracking was causing discrepancies and eating 12+ hours of staff time every week.",
+    result: "45% reduction in stock discrepancies and 12 hours saved weekly — fully automated and live in production.",
     tech: ["Django", "Laravel", "PostgreSQL", "MySQL", "Redis", "Docker", "CI/CD"],
     icon: <Database className="w-8 h-8" />,
     github: "https://github.com/moqayyubok",
@@ -178,22 +184,15 @@ export const projects: Project[] = [
     featured: true,
   },
   {
-    title: "Retro App - Team Collaboration Platform",
-    description: "Secure team collaboration application enabling cross-functional teams to work together. Optimized database queries and implemented Redis caching, improving response time by 60% (2.1s → 0.8s).",
+    title: "Retro App",
+    description: "Secure team collaboration platform for cross-functional teams. Designed with a clean REST API, JWT auth, and a Redis caching layer for high-traffic scenarios.",
+    problem: "Existing collaboration tools were sluggish under load — 2+ second response times were killing team flow.",
+    result: "60% faster response times (2.1s → 0.8s) after optimising queries and implementing Redis caching.",
     tech: ["Django", "PostgreSQL", "Redis", "JWT", "REST API", "Docker"],
     icon: <Code className="w-8 h-8" />,
     github: "https://github.com/moqayyubok",
     demo: "#",
     featured: true,
-  },
-  {
-    title: "AI Content Generator",
-    description: "Multi-modal content generation platform for blogs, social media, and marketing materials.",
-    tech: ["GPT-4", "DALL-E", "React", "Node.js", "MongoDB"],
-    icon: <Brain className="w-8 h-8" />,
-    github: "https://github.com",
-    demo: "https://demo.com",
-    featured: false,
   },
 ]
 
