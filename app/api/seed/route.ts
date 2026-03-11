@@ -5,14 +5,21 @@ import { educationData, certificationsData } from "@/data/data"
 export async function POST(request: Request) {
   try {
     if (!supabase) {
-      return NextResponse.json(
-        { error: "Supabase is not configured. Please set up your NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY environment variables." },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: "Database not configured." }, { status: 500 })
     }
 
-    // Check for authorization (optional - remove if you want public access)
-    const { authorization } = await request.json().catch(() => ({ authorization: null }))
+    // Require SEED_SECRET — this endpoint must never be publicly accessible
+    const SEED_SECRET = process.env.SEED_SECRET
+    if (!SEED_SECRET) {
+      return NextResponse.json({ error: "Endpoint disabled." }, { status: 403 })
+    }
+
+    const body = await request.json().catch(() => ({}))
+    const { authorization } = body
+
+    if (authorization !== SEED_SECRET) {
+      return NextResponse.json({ error: "Unauthorized." }, { status: 401 })
+    }
 
     // Seed Education Data
     const educationRecords = educationData.map((edu) => ({
@@ -74,41 +81,11 @@ export async function POST(request: Request) {
     )
   } catch (error) {
     console.error("Seed error:", error)
-    return NextResponse.json(
-      { error: "Failed to seed database", details: error instanceof Error ? error.message : String(error) },
-      { status: 500 }
-    )
+    return NextResponse.json({ error: "Failed to seed database." }, { status: 500 })
   }
 }
 
-// GET endpoint to check current data
+// GET endpoint disabled in production — use POST with SEED_SECRET instead
 export async function GET() {
-  try {
-    if (!supabase) {
-      return NextResponse.json(
-        { error: "Supabase is not configured" },
-        { status: 500 }
-      )
-    }
-
-    const { data: education, error: eduError } = await supabase
-      .from("education")
-      .select("*")
-
-    const { data: certifications, error: certError } = await supabase
-      .from("certifications")
-      .select("*")
-
-    return NextResponse.json({
-      education: education || [],
-      certifications: certifications || [],
-      educationError: eduError?.message,
-      certificationsError: certError?.message,
-    })
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to fetch data", details: error instanceof Error ? error.message : String(error) },
-      { status: 500 }
-    )
-  }
+  return NextResponse.json({ error: "Method not allowed." }, { status: 405 })
 }

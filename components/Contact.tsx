@@ -12,6 +12,7 @@ export default function Contact() {
     email: "",
     subject: "",
     message: "",
+    website: "", // honeypot — hidden from real users
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState<{
@@ -41,7 +42,7 @@ export default function Contact() {
           message: "Thank you! Your message has been sent successfully.",
         })
         // Reset form
-        setFormData({ name: "", email: "", subject: "", message: "" })
+        setFormData({ name: "", email: "", subject: "", message: "", website: "" })
       } else {
         setSubmitStatus({
           type: "error",
@@ -117,6 +118,19 @@ export default function Contact() {
               </div>
             )}
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Honeypot field — hidden from real users, bots fill it */}
+              <div aria-hidden="true" style={{ display: "none" }}>
+                <label htmlFor="website">Website</label>
+                <input
+                  type="text"
+                  id="website"
+                  name="website"
+                  value={formData.website}
+                  onChange={handleChange}
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
               <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-medium mb-2">

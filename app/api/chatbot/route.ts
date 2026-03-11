@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { dataFetcher } from "@/lib/data-fetcher";
 import { personalInfo, skillCategories, projects, blogPosts, educationData, certificationsData } from "@/data/data";
+import { rateLimit, getClientIP } from "@/lib/rate-limit";
 
 // Conversation memory store (in production, use Redis or database)
 const conversationMemory = new Map<string, Array<{ role: string; content: string; timestamp: number }>>();
@@ -66,16 +67,47 @@ function getEngagementHook(intent: string, lastTopic: string): string {
   return intentHooks[Math.floor(Math.random() * intentHooks.length)];
 }
 
+const MAX_MESSAGE_LENGTH = 500
+const MAX_MESSAGES_HISTORY = 20
+
 export async function POST(req: Request) {
+  // Rate limit: 10 requests per IP per minute
+  const ip = getClientIP(req)
+  if (!rateLimit(ip, 10, 60_000)) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait a moment." },
+      { status: 429 }
+    )
+  }
+
   try {
     const { messages, sessionId = "default" } = await req.json();
     const apiKey = process.env.OPENROUTER_API_KEY;
     if (!apiKey) {
-      return NextResponse.json({ error: "OpenRouter API key not set." }, { status: 500 });
+      return NextResponse.json({ error: "Service unavailable." }, { status: 500 });
     }
 
+    // Validate and sanitise messages
+    if (!Array.isArray(messages) || messages.length === 0) {
+      return NextResponse.json({ error: "Invalid request." }, { status: 400 });
+    }
+
+    // Enforce max length on the latest user message
+    const latestMsg = messages[messages.length - 1];
+    if (latestMsg?.role === "user" && typeof latestMsg.content === "string") {
+      if (latestMsg.content.length > MAX_MESSAGE_LENGTH) {
+        return NextResponse.json(
+          { error: "Message too long. Please keep it under 500 characters." },
+          { status: 400 }
+        );
+      }
+    }
+
+    // Cap total history to prevent token abuse
+    const safeMessages = messages.slice(-MAX_MESSAGES_HISTORY);
+
     // Detect user intent from latest message
-    const latestUserMessage = messages[messages.length - 1]?.content || "";
+    const latestUserMessage = safeMessages[safeMessages.length - 1]?.content || "";
     const userIntent = detectUserIntent(latestUserMessage);
 
     // Manage conversation memory (keep last 10 exchanges = 20 messages)
@@ -87,7 +119,7 @@ export async function POST(req: Request) {
     const memory = conversationMemory.get(sessionId)!;
 
     // Add current messages to memory
-    messages.forEach((msg: any) => {
+    safeMessages.forEach((msg: any) => {
       memory.push({ ...msg, timestamp: currentTime });
     });
 
@@ -315,7 +347,7 @@ REMEMBER:
       // Include conversation memory for context continuity
       ...recentMemory.slice(0, -1).map((msg: any) => ({ role: msg.role, content: msg.content })),
       // Add the latest user message
-      ...messages.slice(-1)
+      ...safeMessages.slice(-1)
     ];
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://your-site-url.com";
@@ -344,6 +376,6 @@ REMEMBER:
     return NextResponse.json(data);
   } catch (error: any) {
     console.error("Chatbot API error:", error);
-    return NextResponse.json({ error: error?.message || String(error) || "Unknown error" }, { status: 500 });
+    return NextResponse.json({ error: "Something went wrong. Please try again." }, { status: 500 });
   }
 }
