@@ -59,7 +59,7 @@ export default function Hero() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
           <a
-            href="/Qayyum_Bokharicv.pdf"
+            href="/Qayyum_Bokhari_CV.docx"
             target="_blank"
             rel="noopener noreferrer"
             className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors flex items-center gap-2"

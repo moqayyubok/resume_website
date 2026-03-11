@@ -82,7 +82,7 @@ export const personalInfo = {
   email: "qayyumbokhari77@gmail.com",
   phone: "07743827727",
   location: "406 Kingstanding Road, B448LD",
-  resumeUrl: "/Qayyum_Bokharicv.pdf",
+  resumeUrl: "/Qayyum_Bokhari_CV.docx",
 }
 
 // Social Links

@@ -6,7 +6,7 @@ export async function GET() {
     timestamp: new Date().toISOString(),
     commitHash: "02d409a",
     changes: {
-      cvButton: "Fixed to Qayyum_Bokharicv.pdf",
+      cvButton: "Updated to Qayyum_Bokhari_CV.docx",
       contactForm: "Has API endpoint at /api/contact",
       chatbot: "Improved personality with temperature 0.9",
       seedEndpoint: "Available at /api/seed",
