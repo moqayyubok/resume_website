@@ -34,8 +34,9 @@ export interface Project {
   result?: string
   tech: string[]
   icon: React.ReactNode
-  github: string
-  demo: string
+  github?: string
+  demo?: string
+  paper?: string
   featured: boolean
 }
 
@@ -163,13 +164,12 @@ export const skillCategories: SkillCategory[] = [
 export const projects: Project[] = [
   {
     title: "Portfolio Optimisation Platform",
-    description: "A hybrid portfolio optimisation platform that integrates classical financial models (CAPM, Black-Litterman, Monte Carlo, VaR) with machine learning (Random Forest, Gradient Boosting) to construct robust investment portfolios. ML forecasts are fed as probabilistic \"views\" into the Black-Litterman framework, producing portfolios that outperformed classical and ML-only approaches across Sharpe ratio (1.20 vs 0.85), Sortino ratio, Value-at-Risk, and turnover metrics. Includes an interactive dashboard with efficient frontiers, allocation dynamics, and stress testing.",
-    problem: "Classical mean-variance optimisation is fragile — sensitive to estimation errors, producing concentrated allocations. Pure ML approaches improve predictions but generate unstable, high-turnover portfolios that are impractical to deploy.",
-    result: "The hybrid framework achieved a 1.20 Sharpe ratio (vs 0.85 classical, 1.05 ML-only), 25% lower drawdowns in crisis scenarios, and significantly reduced portfolio turnover — delivering both theoretically sound and practically robust investment strategies.",
-    tech: ["Python", "Scikit-learn", "Random Forest", "Gradient Boosting", "Black-Litterman", "Monte Carlo", "CAPM", "VaR", "Matplotlib", "Pandas", "NumPy"],
+    description: "Hybrid portfolio optimisation platform integrating classical financial models (CAPM, Black-Litterman, Monte Carlo simulation, Value-at-Risk) with machine learning (Linear Regression, Random Forest, Gradient Boosting). ML forecasts are fed as probabilistic \"views\" into the Black-Litterman framework, producing portfolios that consistently outperform both classical and ML-only approaches. Features an interactive dashboard with efficient frontier visualisations, allocation dynamics, performance metrics, and stress testing under bearish, bullish, and crisis market scenarios.",
+    problem: "Classical mean-variance optimisation relies on assumptions like normal returns and stable covariances, producing fragile and concentrated portfolios. Pure ML approaches improve predictions but generate unstable, high-turnover allocations that are impractical to deploy.",
+    result: "Hybrid framework achieved a 1.20 Sharpe ratio (vs 0.85 classical, 1.05 ML-only), Sortino ratio of 1.55, lowest Value-at-Risk at -1.8% daily, and 25% lower drawdowns under crisis stress tests — the best balance of returns, stability, and risk control across all metrics.",
+    tech: ["Python", "Scikit-learn", "Linear Regression", "Random Forest", "Gradient Boosting", "Black-Litterman", "Monte Carlo", "CAPM", "VaR", "CVaR", "Pandas", "NumPy", "Matplotlib"],
     icon: <BarChart className="w-8 h-8" />,
-    github: "https://colab.research.google.com/drive/1sT8i3C4_WsNBbfckmJdlRlsuGORnIY2V?usp=sharing",
-    demo: "#",
+    paper: "/Portfolio_Optimisation_Platform.pdf",
     featured: true,
   },
   {

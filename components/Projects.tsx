@@ -1,4 +1,4 @@
-import { ExternalLink, Github, AlertCircle, TrendingUp } from "lucide-react"
+import { ExternalLink, Github, AlertCircle, TrendingUp, FileText } from "lucide-react"
 import { projects } from "@/data/data"
 import AskAIButton from "@/components/AskAIButton"
 
@@ -76,16 +76,29 @@ export default function Projects() {
 
                 {/* Links */}
                 <div className="flex gap-4 items-center flex-wrap">
-                  <a
-                    href={project.github}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm"
-                  >
-                    <Github className="w-4 h-4" />
-                    Code
-                  </a>
-                  {project.demo !== "#" && (
+                  {project.paper && (
+                    <a
+                      href={project.paper}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm"
+                    >
+                      <FileText className="w-4 h-4" />
+                      View Paper
+                    </a>
+                  )}
+                  {project.github && (
+                    <a
+                      href={project.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors text-sm"
+                    >
+                      <Github className="w-4 h-4" />
+                      Code
+                    </a>
+                  )}
+                  {project.demo && project.demo !== "#" && (
                     <a
                       href={project.demo}
                       target="_blank"
