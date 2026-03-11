@@ -10,9 +10,11 @@ const QUICK_QUESTIONS = [
   "What certifications does he have?",
 ]
 
+type Message = { role: string; content: string }
+
 export default function AIChat() {
   const [isOpen, setIsOpen] = useState(false)
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
       content:
@@ -23,6 +25,8 @@ export default function AIChat() {
   const [isLoading, setIsLoading] = useState(false)
   const sessionIdRef = useRef<string>("")
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  // Always points to the latest sendMessage — avoids stale closure in event listener
+  const sendMessageRef = useRef<(text: string) => void>(() => {})
 
   useEffect(() => {
     if (!sessionIdRef.current) {
@@ -30,35 +34,27 @@ export default function AIChat() {
     }
   }, [])
 
-  // Lock body scroll on mobile when open
+  // Body scroll lock on mobile when chat is open
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden"
-    } else {
-      document.body.style.overflow = ""
-    }
-    return () => {
-      document.body.style.overflow = ""
-    }
+    document.body.style.overflow = isOpen ? "hidden" : ""
+    return () => { document.body.style.overflow = "" }
   }, [isOpen])
 
-  // Scroll to latest message
+  // Scroll to bottom on new messages / typing indicator
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
   }, [messages, isLoading])
 
   const cleanResponse = (text: string) =>
-    text
-      .replace(/\*/g, "")
-      .replace(/#{1,6}\s/g, "")
-      .replace(/\n\s*\n/g, "\n\n")
-      .trim()
+    text.replace(/\*/g, "").replace(/#{1,6}\s/g, "").replace(/\n\s*\n/g, "\n\n").trim()
 
-  const handleSend = async () => {
-    if (!input.trim() || isLoading) return
+  // Core send function — accepts text directly so it can be called from the event handler
+  const sendMessage = async (text: string, currentMessages: Message[]) => {
+    if (!text.trim() || isLoading) return
 
-    const userMessage = { role: "user", content: input }
-    setMessages((prev) => [...prev, userMessage])
+    const userMessage: Message = { role: "user", content: text }
+    const updatedMessages = [...currentMessages, userMessage]
+    setMessages(updatedMessages)
     setInput("")
     setIsLoading(true)
 
@@ -66,18 +62,16 @@ export default function AIChat() {
       const res = await fetch("/api/chatbot", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: [...messages, userMessage],
-          sessionId: sessionIdRef.current,
-        }),
+        body: JSON.stringify({ messages: updatedMessages, sessionId: sessionIdRef.current }),
       })
 
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
-
       const data = await res.json()
       if (data.error) throw new Error(data.error)
 
-      const raw = data.choices?.[0]?.message?.content || "Sorry, I couldn't generate a response. Please try again."
+      const raw =
+        data.choices?.[0]?.message?.content ||
+        "Sorry, I couldn't generate a response. Please try again."
       setMessages((prev) => [...prev, { role: "assistant", content: cleanResponse(raw) }])
     } catch (err) {
       console.error("Chat error:", err)
@@ -86,13 +80,33 @@ export default function AIChat() {
         ...prev,
         {
           role: "assistant",
-          content: `I apologize, but I encountered an error: ${msg}. Please try asking again, or contact Qayyum directly at qayyumbokhari77@gmail.com.`,
+          content: `I apologize, but I encountered an error: ${msg}. Please try again, or contact Qayyum directly at qayyumbokhari77@gmail.com.`,
         },
       ])
     } finally {
       setIsLoading(false)
     }
   }
+
+  // Keep ref current so the event listener always calls the latest version
+  const messagesRef = useRef(messages)
+  useEffect(() => { messagesRef.current = messages }, [messages])
+
+  sendMessageRef.current = (text: string) => sendMessage(text, messagesRef.current)
+
+  // Listen for project card "Ask AI" deep-link events
+  useEffect(() => {
+    const handler = (e: Event) => {
+      const { message } = (e as CustomEvent<{ message: string }>).detail
+      setIsOpen(true)
+      // Small delay so the chat is mounted/visible before sending
+      setTimeout(() => sendMessageRef.current(message), 50)
+    }
+    window.addEventListener("open-chat", handler)
+    return () => window.removeEventListener("open-chat", handler)
+  }, [])
+
+  const handleSend = () => sendMessage(input, messages)
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -120,25 +134,17 @@ export default function AIChat() {
           className="fixed inset-0 z-50 flex items-center justify-center md:bg-black/50 md:p-4"
           onClick={() => setIsOpen(false)}
         >
-          {/*
-           * Mobile  → full-screen (no rounding, no max-width)
-           * Desktop → centered floating panel (rounded, max-w-4xl, 85vh)
-           */}
+          {/* Mobile: full-screen — Desktop: centered panel */}
           <div
-            className="
-              w-full h-[100dvh] flex flex-col
-              bg-white dark:bg-gray-800
-              md:h-[85vh] md:max-w-4xl md:rounded-lg md:shadow-2xl
-            "
+            className="w-full h-[100dvh] flex flex-col bg-white dark:bg-gray-800 md:h-[85vh] md:max-w-4xl md:rounded-lg md:shadow-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* ── Header ── */}
+            {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 md:px-6 md:py-4 border-b border-gray-200 dark:border-gray-700 flex-shrink-0">
               <div className="flex items-center gap-3">
                 <Bot className="w-6 h-6 text-blue-600 dark:text-blue-400 flex-shrink-0" />
                 <div>
                   <h3 className="text-base md:text-xl font-semibold leading-tight">Qayyum's AI Assistant</h3>
-                  {/* Subtitle hidden on mobile to save space */}
                   <p className="hidden md:block text-sm text-gray-500 dark:text-gray-400">
                     Ask me anything about Qayyum's portfolio
                   </p>
@@ -153,13 +159,13 @@ export default function AIChat() {
               </button>
             </div>
 
-            {/* ── Smart banner — hidden on mobile ── */}
+            {/* Smart banner — desktop only */}
             <div className="hidden md:block px-6 py-3 text-sm text-gray-600 dark:text-gray-400 border-b border-gray-200 dark:border-gray-700 bg-blue-50 dark:bg-blue-900/20 flex-shrink-0">
               <strong>💡 Smart Assistant:</strong> I have access to Qayyum's complete portfolio data including skills,
               education, certifications, projects, and blog posts.
             </div>
 
-            {/* ── Messages (only this part scrolls) ── */}
+            {/* Messages — only this scrolls */}
             <div className="flex-1 px-4 py-4 md:px-6 overflow-y-auto space-y-4 min-h-0">
               {messages.map((message, index) => (
                 <div key={index} className={`flex ${message.role === "user" ? "justify-end" : "justify-start"}`}>
@@ -191,29 +197,40 @@ export default function AIChat() {
                   </div>
                 </div>
               ))}
+
+              {/* Typing indicator — three bouncing dots */}
               {isLoading && (
                 <div className="flex justify-start">
                   <div className="flex items-start gap-2">
-                    <div className="w-7 h-7 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
+                    <div className="w-7 h-7 md:w-8 md:h-8 rounded-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
                       <Bot className="w-4 h-4 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <div className="bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 px-4 py-3 rounded-lg text-sm flex items-center gap-2">
-                      <Loader2 className="w-4 h-4 animate-spin" />
-                      Thinking…
+                    <div className="bg-gray-100 dark:bg-gray-700 px-4 py-3 rounded-lg flex items-center gap-1.5">
+                      {[0, 1, 2].map((i) => (
+                        <span
+                          key={i}
+                          className="block w-2 h-2 rounded-full bg-gray-400 dark:bg-gray-500"
+                          style={{
+                            animation: "chatbot-bounce 1.2s ease-in-out infinite",
+                            animationDelay: `${i * 0.15}s`,
+                          }}
+                        />
+                      ))}
                     </div>
                   </div>
                 </div>
               )}
+
               <div ref={messagesEndRef} />
             </div>
 
-            {/* ── Input area — always pinned at bottom ── */}
+            {/* Input area — always pinned at bottom */}
             <div
               className="flex-shrink-0 px-4 pt-3 pb-4 md:px-6 md:pt-4 md:pb-6 border-t border-gray-200 dark:border-gray-700"
               style={{ paddingBottom: "max(1rem, env(safe-area-inset-bottom))" }}
             >
               {/* Quick questions — horizontal scroll on mobile, wrap on desktop */}
-              <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 md:flex-wrap md:mb-3 mb-3 scrollbar-hide">
+              <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 md:flex-wrap mb-3">
                 <span className="hidden md:inline text-xs text-gray-500 dark:text-gray-400 self-center flex-shrink-0 mr-1">
                   Quick questions:
                 </span>

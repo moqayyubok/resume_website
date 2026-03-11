@@ -1,5 +1,6 @@
 import { ExternalLink, Github, AlertCircle, TrendingUp } from "lucide-react"
 import { projects } from "@/data/data"
+import AskAIButton from "@/components/AskAIButton"
 
 export default function Projects() {
   return (
@@ -74,7 +75,7 @@ export default function Projects() {
                 </div>
 
                 {/* Links */}
-                <div className="flex gap-4">
+                <div className="flex gap-4 items-center flex-wrap">
                   <a
                     href={project.github}
                     target="_blank"
@@ -95,6 +96,7 @@ export default function Projects() {
                       Live Demo
                     </a>
                   )}
+                  <AskAIButton projectTitle={project.title} />
                 </div>
               </div>
             </div>
