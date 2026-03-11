@@ -162,6 +162,17 @@ export const skillCategories: SkillCategory[] = [
 // Projects Data
 export const projects: Project[] = [
   {
+    title: "Portfolio Optimisation Platform",
+    description: "A hybrid portfolio optimisation platform that integrates classical financial models (CAPM, Black-Litterman, Monte Carlo, VaR) with machine learning (Random Forest, Gradient Boosting) to construct robust investment portfolios. ML forecasts are fed as probabilistic \"views\" into the Black-Litterman framework, producing portfolios that outperformed classical and ML-only approaches across Sharpe ratio (1.20 vs 0.85), Sortino ratio, Value-at-Risk, and turnover metrics. Includes an interactive dashboard with efficient frontiers, allocation dynamics, and stress testing.",
+    problem: "Classical mean-variance optimisation is fragile — sensitive to estimation errors, producing concentrated allocations. Pure ML approaches improve predictions but generate unstable, high-turnover portfolios that are impractical to deploy.",
+    result: "The hybrid framework achieved a 1.20 Sharpe ratio (vs 0.85 classical, 1.05 ML-only), 25% lower drawdowns in crisis scenarios, and significantly reduced portfolio turnover — delivering both theoretically sound and practically robust investment strategies.",
+    tech: ["Python", "Scikit-learn", "Random Forest", "Gradient Boosting", "Black-Litterman", "Monte Carlo", "CAPM", "VaR", "Matplotlib", "Pandas", "NumPy"],
+    icon: <BarChart className="w-8 h-8" />,
+    github: "https://colab.research.google.com/drive/1sT8i3C4_WsNBbfckmJdlRlsuGORnIY2V?usp=sharing",
+    demo: "#",
+    featured: true,
+  },
+  {
     title: "AI-Powered CV Chatbot",
     description: "Intelligent chatbot using Retrieval-Augmented Generation (RAG) architecture to provide context-aware responses about CV content. Integrated OpenAI GPT-3.5 API and Llama 2 via Hugging Face Transformers.",
     problem: "Standard LLMs hallucinate when answering questions about specific CV details — confident, wrong answers.",
@@ -169,18 +180,7 @@ export const projects: Project[] = [
     tech: ["Python", "Django", "OpenAI API", "Hugging Face", "FAISS", "AWS EC2", "Docker"],
     icon: <Brain className="w-8 h-8" />,
     github: "https://github.com/moqayyubok",
-    demo: "https://royaltap.shop/",
-    featured: true,
-  },
-  {
-    title: "DF Baston Inventory UK",
-    description: "Comprehensive inventory management system with real-time tracking, RESTful APIs, JWT authentication, and Redis caching. Built for a live UK business with daily active users.",
-    problem: "Manual spreadsheet-based stock tracking was causing discrepancies and eating 12+ hours of staff time every week.",
-    result: "45% reduction in stock discrepancies and 12 hours saved weekly — fully automated and live in production.",
-    tech: ["Django", "Laravel", "PostgreSQL", "MySQL", "Redis", "Docker", "CI/CD"],
-    icon: <Database className="w-8 h-8" />,
-    github: "https://github.com/moqayyubok",
-    demo: "https://www.dfbastoninventory.co.uk/",
+    demo: "#",
     featured: true,
   },
   {
