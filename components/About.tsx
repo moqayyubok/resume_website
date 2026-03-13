@@ -24,29 +24,28 @@ export default function About() {
 
           <div className="space-y-5">
             <h3 className="text-2xl font-semibold text-gray-800 dark:text-white">
-              Self-Taught. Production-Ready. Always Building.
+              Commercial Experience. Production-Ready. Always Building.
             </h3>
 
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-              COVID took my bar job. So I taught myself to code. No bootcamp, no hand-holding — just YouTube, docs, and
-              a lot of broken projects that eventually started working.
+              I&apos;m a Software Engineer with commercial experience building production web applications and
+              AI-powered systems. I&apos;ve delivered measurable results including a 23% reduction in client return
+              rates through predictive analytics and a 35% improvement in backend performance through strategic
+              optimisation.
             </p>
 
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-              To get my first clients, I cold-called businesses I found on Google Maps and offered to build them
-              websites. That&apos;s where I learned that shipping matters more than perfection, and that real users
-              break things in ways you never expect.
+              My journey started with cold-calling businesses on Google Maps and offering to build their websites.
+              That taught me that shipping matters more than perfection, and that real users break things in ways
+              you never expect. Since then, I&apos;ve built production inventory systems with Django and Laravel,
+              designed REST APIs with JWT auth and Redis caching, and deployed AI agents and RAG chatbots using
+              OpenAI and Hugging Face.
             </p>
 
             <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-              Since then I&apos;ve built production inventory systems with Django and Laravel, designed REST APIs with
-              JWT auth and Redis caching, and deployed AI agents and RAG chatbots using OpenAI and Hugging Face. The
-              kind of things that actually run in the real world, not just on localhost.
-            </p>
-
-            <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
-              I&apos;m currently studying BSc Artificial Intelligence &amp; Robotics at Aston University, graduating
-              2027 — which means I spend my days learning the theory and my evenings applying it.
+              I&apos;m currently studying BSc Artificial Intelligence &amp; Robotics at Aston University (graduating
+              2027), combining academic theory with hands-on engineering. I have full right to work in the UK
+              and am actively seeking Software Engineer, AI/ML Engineer, or Full Stack Developer roles.
             </p>
 
             <div className="flex gap-4 mt-6">

@@ -5,10 +5,10 @@ import { ChevronDown, Download } from "lucide-react"
 import { personalInfo, socialLinks } from "@/data/data"
 
 const PHRASES = [
+  "Software Engineer",
   "Full Stack Developer",
-  "AI Tinkerer",
+  "AI & ML Engineer",
   "Problem Solver",
-  "Self-Taught Builder",
 ]
 
 export default function Hero() {
@@ -54,7 +54,7 @@ export default function Hero() {
         </div>
 
         <p className="text-lg text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
-          I build things that work. Full stack developer, AI tinkerer, problem solver.
+          I build things that work. Software engineer with commercial experience in full-stack development and AI-powered applications.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">

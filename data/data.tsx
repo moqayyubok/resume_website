@@ -77,12 +77,12 @@ export const navLinks: NavLink[] = [
 // Personal Information
 export const personalInfo = {
   name: "Qayyum Bokhari",
-  title: "AI and Software Engineer",
+  title: "Software Engineer",
   description:
-    "Full-Stack Developer transitioning to AI Engineering with hands-on experience building production ML systems. Delivered 23% reduction in client return rates through predictive analytics and developed AI-powered applications using OpenAI API, Hugging Face Transformers, and Django. Currently pursuing BSc in AI & Robotics at Aston University (2024-2027) while building intelligent web applications. Seeking junior AI engineer roles to combine software engineering expertise with machine learning implementation.",
+    "Results-driven Software Engineer with commercial experience in full-stack development, CI/CD pipeline design, and AI-powered application development. Proven ability to deliver production-ready web applications using Python, Django, React, and PostgreSQL, achieving measurable outcomes including a 23% reduction in client return rates and a 35% improvement in backend performance. Currently pursuing a BSc in Artificial Intelligence and Robotics at Aston University. Seeking Software Engineer, AI/ML Engineer, or Full Stack Developer roles across the UK.",
   email: "qayyumbokhari77@gmail.com",
   phone: "07743827727",
-  location: "406 Kingstanding Road, B448LD",
+  location: "Birmingham, UK",
   resumeUrl: "/Qayyum_Bokhari_CV.docx",
 }
 
@@ -179,7 +179,7 @@ export const projects: Project[] = [
     result: "92% response accuracy using RAG + FAISS vector search to ground every answer in real CV data.",
     tech: ["Python", "Django", "OpenAI API", "Hugging Face", "FAISS", "AWS EC2", "Docker"],
     icon: <Brain className="w-8 h-8" />,
-    github: "https://github.com/moqayyubok",
+    github: "https://github.com/moqayyubok/Retro",
     demo: "#",
     featured: true,
   },
@@ -212,7 +212,7 @@ export const projects: Project[] = [
     result: "60% faster response times (2.1s → 0.8s) after optimising queries and implementing Redis caching.",
     tech: ["Django", "PostgreSQL", "Redis", "JWT", "REST API", "Docker"],
     icon: <Code className="w-8 h-8" />,
-    github: "https://github.com/moqayyubok",
+    github: "https://github.com/moqayyubok/Retro",
     demo: "#",
     featured: true,
   },
@@ -224,7 +224,7 @@ export const blogPosts: BlogPost[] = [
     title: "Building DF Baston Inventory System",
     excerpt:
       "A comprehensive look at developing a full-stack inventory management system with real-time tracking, user authentication, and dashboard analytics. Learn about the architecture, challenges, and solutions implemented.",
-    date: "2025-01-10",
+    date: "2026-02-15",
     slug: "building-df-baston-inventory-system",
     readTime: "12 min read",
     category: "Web Development",
@@ -347,7 +347,7 @@ The DF Baston Inventory System demonstrates practical application of modern web 
     title: "DF Baston Inventory UK: Enhanced Features and Localization",
     excerpt:
       "Exploring the UK-specific version of the inventory system with enhanced features, localized settings, and advanced reporting capabilities. A deep dive into internationalization and regional customization.",
-    date: "2025-01-08",
+    date: "2026-01-20",
     slug: "df-baston-inventory-uk-enhanced-features",
     readTime: "10 min read",
     category: "Web Development",
@@ -515,7 +515,7 @@ The DF Baston Inventory UK system demonstrates how localization and continuous i
     title: "Building My AI Spam Detector",
     excerpt:
       "Learn how I built an advanced spam detection system using machine learning algorithms and achieved 95% accuracy. This comprehensive guide covers data preprocessing, feature engineering, model selection, and deployment strategies.",
-    date: "2025-01-05",
+    date: "2025-12-10",
     slug: "building-ai-spam-detector",
     readTime: "8 min read",
     category: "Machine Learning",
@@ -630,7 +630,7 @@ This project demonstrates the practical application of machine learning in solvi
     title: "Getting Started with LangChain",
     excerpt:
       "A comprehensive guide to building AI applications with LangChain and large language models. Explore chains, agents, memory, and vector stores to create powerful AI-driven applications.",
-    date: "2025-01-03",
+    date: "2025-11-15",
     slug: "getting-started-langchain",
     readTime: "12 min read",
     category: "AI Development",
@@ -669,7 +669,7 @@ This guide covers the fundamentals of building AI applications with LangChain an
     title: "Next.js 15 Features You Should Know",
     excerpt:
       "Exploring the latest features in Next.js 15 and how they can improve your web development workflow. From improved performance to new developer experience enhancements.",
-    date: "2025-01-01",
+    date: "2025-10-20",
     slug: "nextjs-15-features",
     readTime: "6 min read",
     category: "Web Development",

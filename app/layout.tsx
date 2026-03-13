@@ -10,13 +10,13 @@ import DataStatus from "@/components/DataStatus"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata: Metadata = {
-  title: "Qayyum Bokhari - AI & Robotics Developer",
-  description: "AI & Robotics portfolio showcasing projects and expertise in machine learning, robotics, and full-stack development.",
-  keywords: "AI, Machine Learning, Robotics, Web Development, Portfolio, Blog",
+  title: "Qayyum Bokhari - Software Engineer | AI & Full Stack Developer",
+  description: "Software Engineer with commercial experience in full-stack development, CI/CD, and AI-powered applications. Python, Django, React, LLMs. Based in Birmingham, UK.",
+  keywords: "Software Engineer, Full Stack Developer, AI Engineer, Python, Django, React, Machine Learning, Birmingham, UK",
   authors: [{ name: "Qayyum Bokhari" }],
   openGraph: {
-    title: "Qayyum Bokhari - AI & Robotics Developer",
-    description: "AI & Robotics portfolio showcasing projects and expertise",
+    title: "Qayyum Bokhari - Software Engineer | AI & Full Stack Developer",
+    description: "Software Engineer with commercial experience in full-stack development and AI-powered applications",
     type: "website",
   },
     generator: 'v0.dev'
