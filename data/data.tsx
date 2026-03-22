@@ -222,7 +222,7 @@ export const projects: Project[] = [
     tech: ["React", "Recharts", "Vite"],
     icon: <Cpu className="w-8 h-8" />,
     github: "https://github.com/moqayyubok/chemistry-buffer-simulator",
-    demo: "https://demo-chemistry-iz8n4dpfl-qayyum-bokharis-projects.vercel.app",
+    demo: "https://demo-chemistry-sim.vercel.app",
     featured: true,
   },
   {
