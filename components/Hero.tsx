@@ -1,40 +1,78 @@
 "use client"
 
-import { useRef, useState, useEffect } from "react"
+import { useRef, useState, useEffect, useCallback } from "react"
 import { motion } from "framer-motion"
-import Image from "next/image"
 import { Download, Mail, ChevronDown } from "lucide-react"
 import { Plus_Jakarta_Sans } from "next/font/google"
 
+// ─── Font ─────────────────────────────────────────────────────────────────────
 const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "700", "800"],
   display: "swap",
 })
 
-// ─── Easing curve: snappy deceleration ────────────────────────────────────────
-const EASE = [0.16, 1, 0.3, 1] as const
+// ─── Constants ────────────────────────────────────────────────────────────────
+const BLUE       = "#3B82F6"
+const BLUE_LIGHT = "#60A5FA"
+const EASE       = [0.16, 1, 0.3, 1] as const
 
-// ─── Slide-up reveal variant ──────────────────────────────────────────────────
-const slideUp = (delay = 0) => ({
-  initial: { y: "105%", opacity: 0 },
-  animate: { y: 0, opacity: 1 },
-  transition: { delay, duration: 0.9, ease: EASE },
-})
+const QAYYUM  = "QAYYUM".split("")
+const BOKHARI = "BOKHARI".split("")
+const TOTAL   = QAYYUM.length + BOKHARI.length // 13
 
-// ─── Fade-up variant ──────────────────────────────────────────────────────────
-const fadeUp = (delay = 0) => ({
-  initial: { opacity: 0, y: 28 },
-  animate: { opacity: 1, y: 0 },
-  transition: { delay, duration: 0.75, ease: EASE },
-})
+// Spring configs
+const SCATTER_SPRING = { type: "spring" as const, stiffness: 60, damping: 10, mass: 1.4 }
+const RETURN_SPRING  = { type: "spring" as const, stiffness: 220, damping: 32 }
+const OPACITY_TWEEN  = { duration: 0.22, ease: "easeOut" } as const
 
+// ─── Types ────────────────────────────────────────────────────────────────────
+type LetterState = { x: number; y: number; rotate: number; opacity: number }
+const REST: LetterState = { x: 0, y: 0, rotate: 0, opacity: 1 }
+
+// ─── Scatter computation ──────────────────────────────────────────────────────
+// For each letter, calculates a displacement vector pointing AWAY from cursor.
+// Letters closer to the cursor scatter further (inverse-distance weighting).
+function computeScatter(
+  refs: React.MutableRefObject<(HTMLSpanElement | null)[]>,
+  cursorX: number,
+  cursorY: number,
+): LetterState[] {
+  return refs.current.map((el) => {
+    if (!el) return { ...REST, opacity: 0 }
+
+    const r  = el.getBoundingClientRect()
+    const cx = r.left + r.width  / 2
+    const cy = r.top  + r.height / 2
+
+    const dx   = cx - cursorX
+    const dy   = cy - cursorY
+    const dist = Math.sqrt(dx * dx + dy * dy)
+
+    // Closer → bigger displacement (capped at 300px)
+    const mag = Math.min(300, 11000 / (dist + 35))
+
+    // Unit direction away from cursor; fallback to random if cursor is on top
+    const nx = dist > 0.5 ? dx / dist : Math.random() - 0.5
+    const ny = dist > 0.5 ? dy / dist : Math.random() - 0.5
+
+    return {
+      x:      nx * mag,
+      y:      ny * mag,
+      rotate: (Math.random() - 0.5) * 68,
+      opacity: 0,
+    }
+  })
+}
+
+// ─── Component ────────────────────────────────────────────────────────────────
 export default function Hero() {
-  const sectionRef = useRef<HTMLElement>(null)
-  const [mouse, setMouse] = useState({ x: 0, y: 0 })
+  const letterRefs = useRef<(HTMLSpanElement | null)[]>(new Array(TOTAL).fill(null))
   const [isMobile, setIsMobile] = useState(false)
+  const [hovered,  setHovered]  = useState(false)
+  const [states,   setStates]   = useState<LetterState[]>(() => new Array(TOTAL).fill(REST))
 
-  // ── Detect mobile once on mount + on resize ──────────────────────────────
+  // Detect mobile on mount + resize
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 768)
     check()
@@ -42,42 +80,42 @@ export default function Hero() {
     return () => window.removeEventListener("resize", check)
   }, [])
 
-  // ── Normalised mouse position: −0.5 → +0.5 ──────────────────────────────
-  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+  // Scatter on cursor entry — capture entry position, calculate vectors once
+  const onEnter = useCallback((e: React.MouseEvent) => {
     if (isMobile) return
-    const r = sectionRef.current!.getBoundingClientRect()
-    setMouse({
-      x: (e.clientX - r.left) / r.width - 0.5,
-      y: (e.clientY - r.top) / r.height - 0.5,
-    })
-  }
+    setHovered(true)
+    setStates(computeScatter(letterRefs, e.clientX, e.clientY))
+  }, [isMobile])
 
-  const handleMouseLeave = () => setMouse({ x: 0, y: 0 })
+  // Spring letters back on cursor leave
+  const onLeave = useCallback(() => {
+    if (isMobile) return
+    setHovered(false)
+    setStates(new Array(TOTAL).fill(REST))
+  }, [isMobile])
 
-  // ── Parallax helpers ─────────────────────────────────────────────────────
-  const shift = (factor: number) =>
-    isMobile ? "none" : `translate(${mouse.x * factor}px, ${mouse.y * factor}px)`
+  // Transition applied to each letter (per-property so spring ≠ opacity speed)
+  const transition = hovered
+    ? { x: SCATTER_SPRING, y: SCATTER_SPRING, rotate: SCATTER_SPRING, opacity: OPACITY_TWEEN }
+    : { x: RETURN_SPRING,  y: RETURN_SPRING,  rotate: RETURN_SPRING,  opacity: OPACITY_TWEEN }
 
   return (
     <section
-      ref={sectionRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       className={`${jakarta.className} relative min-h-screen overflow-hidden flex flex-col`}
       style={{ background: "#0a0a0a" }}
     >
-      {/* ── Subtle dot-grid texture ──────────────────────────────────────── */}
+      {/* ── Dot-grid texture ─────────────────────────────────────────────── */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
         style={{
           backgroundImage:
-            "radial-gradient(circle, rgba(255,255,255,0.06) 1px, transparent 1px)",
+            "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)",
           backgroundSize: "40px 40px",
         }}
       />
 
-      {/* ── Ambient orange glow (follows cursor slightly) ────────────────── */}
+      {/* ── Ambient blue glow (top-right) ────────────────────────────────── */}
       <div
         aria-hidden
         className="pointer-events-none absolute rounded-full"
@@ -87,10 +125,8 @@ export default function Hero() {
           top: "5%",
           right: "-10%",
           background:
-            "radial-gradient(circle, rgba(249,115,22,0.13) 0%, transparent 68%)",
+            "radial-gradient(circle, rgba(59,130,246,0.10) 0%, transparent 68%)",
           filter: "blur(40px)",
-          transform: shift(18),
-          transition: "transform 0.5s ease-out",
         }}
       />
 
@@ -99,149 +135,148 @@ export default function Hero() {
       ═══════════════════════════════════════════════════════════════════ */}
       <div className="relative flex-1 flex flex-col justify-center px-6 md:px-14 lg:px-20 pt-28 pb-10">
 
-        {/* ── Mobile-only: small circular photo above name ─────────────── */}
+        {/* ── Name block ───────────────────────────────────────────────── */}
+        {/*
+            Structure:
+              [outer motion.div]  — entrance animation (fade + slide-up)
+                [relative div]    — positioning context for subtitle overlay
+                  [cursor div]    — mouse event target
+                    h1 QAYYUM     — each letter is a motion.span
+                    h1 BOKHARI    — each letter is a motion.span (blue stroke)
+                  [subtitle overlay] — absolute, pointer-events-none, fades on hover
+        */}
         <motion.div
-          className="md:hidden mb-6 self-start"
-          {...fadeUp(0.15)}
+          initial={{ opacity: 0, y: 36 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.85, ease: EASE }}
         >
-          <div
-            className="relative"
-            style={{
-              width: 80,
-              height: 80,
-              borderRadius: "50%",
-              overflow: "hidden",
-              border: "2px solid rgba(249,115,22,0.4)",
-              boxShadow: "0 0 24px rgba(249,115,22,0.2)",
-            }}
-          >
-            <Image
-              src="/Mypicture.jpg"
-              alt="Qayyum Bokhari"
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        </motion.div>
+          <div className="relative">
 
-        {/* ── Giant name block + overlapping photo ─────────────────────── */}
-        <div className="relative">
-
-          {/* Text — shifts opposite direction to photo */}
-          <div
-            style={{
-              transform: shift(-7),
-              transition: "transform 0.18s ease-out",
-            }}
-          >
-            {/* QAYYUM — solid white */}
-            <div className="overflow-hidden">
-              <motion.h1
-                {...slideUp(0)}
+            {/* Mouse event zone */}
+            <div
+              className="cursor-default"
+              onMouseEnter={onEnter}
+              onMouseLeave={onLeave}
+            >
+              {/* QAYYUM — solid white fill */}
+              <h1
                 className="font-extrabold uppercase tracking-tighter text-white leading-none select-none"
                 style={{ fontSize: "clamp(3.8rem, 17.8vw, 248px)", lineHeight: 0.87 }}
               >
-                QAYYUM
-              </motion.h1>
-            </div>
+                {QAYYUM.map((char, i) => (
+                  <motion.span
+                    key={i}
+                    ref={(el) => { letterRefs.current[i] = el }}
+                    style={{ display: "inline-block" }}
+                    animate={states[i]}
+                    transition={transition}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </h1>
 
-            {/* BOKHARI — outline / stroke style */}
-            <div className="overflow-hidden">
-              <motion.h1
-                {...slideUp(0.1)}
+              {/* BOKHARI — transparent fill + blue stroke
+                  `color` and `-webkit-text-stroke` are inherited by child spans */}
+              <h1
                 className="font-extrabold uppercase tracking-tighter leading-none select-none"
                 style={{
                   fontSize: "clamp(3.8rem, 17.8vw, 248px)",
                   lineHeight: 0.87,
                   color: "transparent",
-                  WebkitTextStroke: "clamp(1px, 0.15vw, 2.5px) #F97316",
+                  WebkitTextStroke: "clamp(1px, 0.15vw, 2.5px) #3B82F6",
                 }}
               >
-                BOKHARI
-              </motion.h1>
+                {BOKHARI.map((char, i) => (
+                  <motion.span
+                    key={i}
+                    ref={(el) => { letterRefs.current[QAYYUM.length + i] = el }}
+                    style={{ display: "inline-block" }}
+                    animate={states[QAYYUM.length + i]}
+                    transition={transition}
+                  >
+                    {char}
+                  </motion.span>
+                ))}
+              </h1>
             </div>
-          </div>
 
-          {/* ── Profile photo — overlaps both name lines ─────────────── */}
-          <div
-            className="hidden md:block absolute pointer-events-none"
-            style={{
-              /* sits between the two name lines, pushed right */
-              top: "50%",
-              right: "clamp(0px, 2vw, 40px)",
-              zIndex: 20,
-              transform: `translate(${isMobile ? 0 : mouse.x * 14}px, calc(-50% + ${isMobile ? 0 : mouse.y * 14}px))`,
-              transition: "transform 0.14s ease-out",
-            }}
-          >
+            {/* Subtitle overlay — appears in the name's place on hover.
+                pointer-events-none so it never blocks the mouse events below. */}
             <motion.div
-              initial={{ scale: 0.78, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.32, duration: 1, ease: EASE }}
+              aria-hidden={!hovered}
+              className="absolute inset-0 flex items-center pointer-events-none"
+              animate={{
+                opacity: hovered ? 1 : 0,
+                scale:   hovered ? 1 : 0.94,
+              }}
+              transition={{ duration: 0.35, ease: "easeOut" }}
             >
-              <div
+              <p
+                className="font-extrabold uppercase"
                 style={{
-                  width: "clamp(200px, 23vw, 370px)",
-                  height: "clamp(240px, 28vw, 450px)",
-                  /* organic blob shape — top rounded, bottom tapers */
-                  borderRadius: "48% 52% 46% 54% / 42% 42% 58% 58%",
-                  overflow: "hidden",
-                  border: "2px solid rgba(249,115,22,0.22)",
-                  boxShadow:
-                    "0 0 90px rgba(249,115,22,0.11), 0 50px 110px rgba(0,0,0,0.65)",
+                  fontSize:      "clamp(1.1rem, 4.8vw, 68px)",
+                  color:         BLUE_LIGHT,
+                  lineHeight:    1.05,
+                  letterSpacing: "0.06em",
                 }}
               >
-                <Image
-                  src="/Mypicture.jpg"
-                  alt="Qayyum Bokhari"
-                  width={370}
-                  height={450}
-                  className="object-cover w-full h-full object-top"
-                  priority
-                />
-              </div>
+                Full-Stack Developer
+                <br />
+                &amp;&nbsp;AI Engineer
+              </p>
             </motion.div>
+
           </div>
+        </motion.div>
 
-        </div>
+        {/* ── Mobile-only static subtitle ──────────────────────────────── */}
+        <motion.p
+          className="md:hidden mt-5 text-sm font-semibold tracking-[0.22em] uppercase"
+          style={{ color: BLUE_LIGHT }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+        >
+          Full-Stack Developer &amp; AI Engineer
+        </motion.p>
 
-        {/* ── Subtitle + CTA row ───────────────────────────────────────── */}
+        {/* ── Bottom row: tagline + CTA buttons ───────────────────────── */}
         <div className="mt-8 md:mt-10 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
 
           {/* Left: role label + one-liner */}
-          <motion.div {...fadeUp(0.52)}>
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.52, duration: 0.75, ease: EASE }}
+          >
             <p
-              className="text-xs font-bold tracking-[0.28em] uppercase mb-2"
-              style={{ color: "#F97316" }}
+              className="hidden md:block text-xs font-bold tracking-[0.28em] uppercase mb-2"
+              style={{ color: BLUE_LIGHT }}
             >
               Full-Stack Developer &amp; AI Engineer
             </p>
-            <p className="text-sm leading-relaxed max-w-xs" style={{ color: "rgba(255,255,255,0.38)" }}>
-              Building production software with React, Django,&nbsp;and LLM integrations.
+            <p
+              className="text-sm leading-relaxed max-w-xs"
+              style={{ color: "rgba(255,255,255,0.38)" }}
+            >
+              Building production software with React, Django, and LLM integrations.
             </p>
           </motion.div>
 
           {/* Right: buttons */}
-          <motion.div {...fadeUp(0.68)} className="flex items-center gap-3">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.68, duration: 0.75, ease: EASE }}
+            className="flex items-center gap-3"
+          >
             <a
               href="/Qayyum_Bokhari_CV.docx"
-              className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-full transition-all duration-300"
-              style={{
-                color: "rgba(255,255,255,0.75)",
-                border: "1px solid rgba(255,255,255,0.14)",
-              }}
-              onMouseEnter={(e) => {
-                ;(e.currentTarget as HTMLAnchorElement).style.borderColor =
-                  "rgba(249,115,22,0.55)"
-                ;(e.currentTarget as HTMLAnchorElement).style.color = "#F97316"
-              }}
-              onMouseLeave={(e) => {
-                ;(e.currentTarget as HTMLAnchorElement).style.borderColor =
-                  "rgba(255,255,255,0.14)"
-                ;(e.currentTarget as HTMLAnchorElement).style.color =
-                  "rgba(255,255,255,0.75)"
-              }}
+              className="flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-full
+                         border border-white/[0.14] text-white/75
+                         transition-all duration-300
+                         hover:border-blue-500/60 hover:text-blue-400"
             >
               <Download className="w-4 h-4" />
               Resume
@@ -249,8 +284,9 @@ export default function Hero() {
 
             <a
               href="#contact"
-              className="flex items-center gap-2 px-5 py-2.5 text-sm font-bold rounded-full transition-all duration-200 hover:brightness-110 active:scale-95"
-              style={{ background: "#F97316", color: "#0a0a0a" }}
+              className="flex items-center gap-2 px-5 py-2.5 text-sm font-bold rounded-full text-white
+                         transition-all duration-200 hover:brightness-110 active:scale-95"
+              style={{ background: BLUE }}
             >
               <Mail className="w-4 h-4" />
               Get in Touch
@@ -262,7 +298,9 @@ export default function Hero() {
 
       {/* ── Scroll indicator ─────────────────────────────────────────────── */}
       <motion.div
-        {...fadeUp(1.05)}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1.05, duration: 0.6 }}
         className="flex flex-col items-center pb-9 gap-1.5"
       >
         <span
@@ -275,7 +313,7 @@ export default function Hero() {
           animate={{ y: [0, 7, 0] }}
           transition={{ repeat: Infinity, duration: 1.7, ease: "easeInOut" }}
         >
-          <ChevronDown className="w-4 h-4" style={{ color: "#F97316" }} />
+          <ChevronDown className="w-4 h-4" style={{ color: BLUE_LIGHT }} />
         </motion.div>
       </motion.div>
     </section>
