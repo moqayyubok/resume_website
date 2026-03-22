@@ -216,6 +216,23 @@ export const projects: Project[] = [
     demo: "#",
     featured: true,
   },
+  {
+    title: "Interactive Chemistry Buffer Simulator",
+    description: "A React-based simulation tool for chemistry education. Features live Henderson-Hasselbalch pH calculations, interactive buffer component controls, dynamic titration curves, a visual pH scale with real-time indicator, and buffer effectiveness status monitoring.",
+    tech: ["React", "Recharts", "Vite"],
+    icon: <Cpu className="w-8 h-8" />,
+    github: "https://github.com/moqayyubok/chemistry-buffer-simulator",
+    demo: "https://demo-chemistry-iz8n4dpfl-qayyum-bokharis-projects.vercel.app",
+    featured: true,
+  },
+  {
+    title: "FotoMarketplace",
+    description: "A photography and videography marketplace connecting creators with clients. Features photographer profiles, portfolio galleries, booking system, and search with filters.",
+    tech: ["React", "TypeScript", "Vite", "Tailwind CSS", "Supabase"],
+    icon: <Globe className="w-8 h-8" />,
+    github: "https://github.com/moqayyubok/fotomarketplace",
+    featured: true,
+  },
 ]
 
 // Blog Posts Data
