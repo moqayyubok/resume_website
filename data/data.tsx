@@ -233,6 +233,17 @@ export const projects: Project[] = [
     github: "https://github.com/moqayyubok/fotomarketplace",
     featured: true,
   },
+  {
+    title: "Cohere RAG Chatbot",
+    description: "Document Q&A chatbot powered entirely by Cohere's AI stack. Upload any PDF or text file and ask questions — every answer is grounded in the document with inline citations showing exactly which passages the model used. Built without LangChain or any framework — raw pipeline from scratch.",
+    problem: "LLMs hallucinate when answering document-specific questions because they rely on parametric memory rather than the actual content.",
+    result: "5-step RAG pipeline (embed → FAISS → rerank → generate) with character-level inline citations, achieving precise retrieval via cross-encoder reranking over raw vector similarity.",
+    tech: ["Cohere", "RAG", "FAISS", "Next.js", "TypeScript", "FastAPI", "Python"],
+    icon: <Brain className="w-8 h-8" />,
+    github: "https://github.com/moqayyubok/cohere-rag-chatbot",
+    demo: "/cohere-rag",
+    featured: true,
+  },
 ]
 
 // Blog Posts Data
