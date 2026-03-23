@@ -82,7 +82,7 @@ export async function POST(req: Request) {
 
   try {
     const { messages, sessionId = "default" } = await req.json();
-    const apiKey = process.env.OPENROUTER_API_KEY;
+    const apiKey = process.env.GROQ_API_KEY;
     if (!apiKey) {
       return NextResponse.json({ error: "Service unavailable." }, { status: 500 });
     }
@@ -350,25 +350,17 @@ REMEMBER:
       ...safeMessages.slice(-1)
     ];
 
-    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://your-site-url.com";
-    const siteName = process.env.NEXT_PUBLIC_SITE_NAME || "Qayyum Portfolio";
-    
-    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${apiKey}`,
-        "HTTP-Referer": siteUrl,
-        "X-Title": siteName,
       },
       body: JSON.stringify({
-        model: "openai/gpt-4o",
+        model: "llama-3.3-70b-versatile",
         messages: messagesWithContext,
         temperature: 0.95,
         max_tokens: 1500,
-        top_p: 0.95,
-        frequency_penalty: 0.5,
-        presence_penalty: 0.6,
       }),
     });
     
