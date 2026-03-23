@@ -2,63 +2,46 @@ import Link from "next/link"
 import { Calendar, ArrowRight } from "lucide-react"
 import { getLatestBlogPosts } from "@/data/data"
 
+const MONO: React.CSSProperties = { fontFamily: "var(--font-mono)" }
+
 export default function BlogPreview() {
   const blogPosts = getLatestBlogPosts(3)
-
   return (
-    <section className="py-20 bg-gray-50 dark:bg-gray-800">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold mb-4">Latest Blog Posts</h2>
-          <div className="w-20 h-1 bg-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Sharing insights about AI, machine learning, and web development
+    <section className="py-24" style={{ background: "#0a0a0a" }}>
+      <div className="max-w-6xl mx-auto px-6 md:px-10">
+        <div className="mb-14">
+          <p className="text-[10px] font-medium tracking-[0.28em] uppercase mb-3" style={{ ...MONO, color: "#60A5FA" }}>
+            ( 07 ) &nbsp;Writing
           </p>
+          <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">Latest Posts</h2>
+          <div className="mt-5 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
+          <p className="mt-4 text-sm" style={{ color: "rgba(255,255,255,0.4)" }}>Sharing insights on AI, machine learning, and web development</p>
         </div>
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
           {blogPosts.map((post, index) => (
-            <article
-              key={index}
-              className="bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
-            >
-              <div className="p-6">
-                <div className="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-3">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  {new Date(post.date).toLocaleDateString("en-US", {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  })}
-                  <span className="mx-2">•</span>
-                  {post.readTime}
-                </div>
-
-                <h3 className="text-xl font-semibold mb-3 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
-                  <Link href={`/blog/${post.slug}`}>{post.title}</Link>
-                </h3>
-
-                <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">{post.excerpt}</p>
-
-                <Link
-                  href={`/blog/${post.slug}`}
-                  className="inline-flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium"
-                >
-                  Read More
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Link>
+            <article key={index} className="p-6 rounded-2xl flex flex-col transition-all duration-300 hover:border-white/[0.13]" style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)" }}>
+              <div className="flex items-center gap-2 text-[10px] mb-4" style={{ ...MONO, color: "rgba(255,255,255,0.35)" }}>
+                <Calendar className="w-3 h-3" />
+                {new Date(post.date).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}
+                <span>·</span>
+                {post.readTime}
               </div>
+              <span className="inline-block px-2 py-0.5 text-[10px] rounded-full mb-3 self-start" style={{ background: "rgba(59,130,246,0.1)", border: "1px solid rgba(59,130,246,0.2)", color: "#60A5FA", ...MONO }}>
+                {post.category}
+              </span>
+              <h3 className="text-sm font-bold text-white mb-3 leading-snug flex-1">
+                <Link href={`/blog/${post.slug}`} className="hover:text-blue-400 transition-colors">{post.title}</Link>
+              </h3>
+              <p className="text-xs leading-relaxed mb-5" style={{ color: "rgba(255,255,255,0.45)" }}>{post.excerpt.slice(0, 120)}…</p>
+              <Link href={`/blog/${post.slug}`} className="inline-flex items-center gap-1.5 text-xs font-semibold transition-colors hover:text-blue-300" style={{ color: "#60A5FA" }}>
+                Read More <ArrowRight className="w-3.5 h-3.5" />
+              </Link>
             </article>
           ))}
         </div>
-
         <div className="text-center">
-          <Link
-            href="/blog"
-            className="inline-flex items-center bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-lg font-semibold transition-colors"
-          >
-            View All Posts
-            <ArrowRight className="w-5 h-5 ml-2" />
+          <Link href="/blog" className="inline-flex items-center gap-2 px-6 py-2.5 text-xs font-bold rounded-full text-white transition-all hover:brightness-110" style={{ background: "#3B82F6" }}>
+            View All Posts <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       </div>

@@ -2,102 +2,87 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { Menu, X, Moon, Sun } from "lucide-react"
+import { Menu, X } from "lucide-react"
 import { navLinks } from "@/data/data"
 
+const MONO: React.CSSProperties = { fontFamily: "var(--font-mono)" }
+
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
-  const [isDark, setIsDark] = useState(false)
+  const [isOpen,   setIsOpen]   = useState(false)
+  const [scrolled, setScrolled] = useState(false)
 
   useEffect(() => {
-    const theme = localStorage.getItem("theme")
-    if (theme === "dark" || (!theme && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
-      setIsDark(true)
-      document.documentElement.classList.add("dark")
-    }
+    const onScroll = () => setScrolled(window.scrollY > 24)
+    window.addEventListener("scroll", onScroll, { passive: true })
+    return () => window.removeEventListener("scroll", onScroll)
   }, [])
 
-  const toggleTheme = () => {
-    setIsDark(!isDark)
-    if (isDark) {
-      document.documentElement.classList.remove("dark")
-      localStorage.setItem("theme", "light")
+  const handleNavigation = (href: string) => {
+    setIsOpen(false)
+    if (href.startsWith("#")) {
+      window.location.href = `/${href}`
     } else {
-      document.documentElement.classList.add("dark")
-      localStorage.setItem("theme", "dark")
+      window.location.href = href
     }
   }
 
-  // Updated handleNavigation to redirect to homepage with hash for sections
-  const handleNavigation = (href: string) => {
-    setIsOpen(false);
-    if (href.startsWith("#")) {
-      // Redirect to the homepage with the hash
-      window.location.href = `/${href}`;
-    } else if (href.startsWith("/")) {
-      // Navigate to an absolute path
-      window.location.href = href;
-    } else {
-      // Navigate to a new page
-      window.location.hash = ""; // Clear any existing hash
-      window.location.href = href;
-    }
-  };
-
   return (
-    <nav className="fixed top-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-md z-50 border-b border-gray-200 dark:border-gray-700">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav
+      className="fixed top-0 w-full z-50 transition-all duration-300"
+      style={{
+        background:     scrolled ? "rgba(10,10,10,0.92)" : "transparent",
+        borderBottom:   scrolled ? "1px solid rgba(255,255,255,0.06)" : "1px solid transparent",
+        backdropFilter: scrolled ? "blur(16px)" : "none",
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-6 md:px-10">
         <div className="flex justify-between items-center h-16">
-          <Link href="/" className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-            Qayyum
+          <Link
+            href="/"
+            className="text-sm font-extrabold tracking-widest uppercase text-white hover:text-blue-400 transition-colors"
+            style={MONO}
+          >
+            QB
           </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center gap-8">
             {navLinks.map((link) => (
               <button
                 key={link.href}
                 onClick={() => handleNavigation(link.href)}
-                className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                className="text-[11px] tracking-[0.18em] uppercase transition-colors duration-200 hover:text-white"
+                style={{ ...MONO, color: "rgba(255,255,255,0.45)" }}
               >
                 {link.label}
               </button>
             ))}
-            <button
-              onClick={toggleTheme}
-              className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-            >
-              {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
           </div>
-
-          {/* Mobile Navigation Button */}
-          <div className="md:hidden flex items-center space-x-2">
-            <button onClick={toggleTheme} className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
-              {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-            </button>
-            <button onClick={() => setIsOpen(!isOpen)} className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
-              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
+          <button
+            className="md:hidden p-2 transition-colors"
+            style={{ color: "rgba(255,255,255,0.55)" }}
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
+          >
+            {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
         </div>
-
-        {/* Mobile Navigation Menu */}
-        {isOpen && (
-          <div className="md:hidden py-4 border-t border-gray-200 dark:border-gray-700">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="block py-2 text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                onClick={() => setIsOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
-        )}
       </div>
+      {isOpen && (
+        <div
+          className="md:hidden px-6 py-6 flex flex-col gap-5"
+          style={{ background: "rgba(10,10,10,0.97)", borderTop: "1px solid rgba(255,255,255,0.06)" }}
+        >
+          {navLinks.map((link) => (
+            <button
+              key={link.href}
+              onClick={() => handleNavigation(link.href)}
+              className="text-left text-[11px] tracking-[0.2em] uppercase transition-colors hover:text-white"
+              style={{ ...MONO, color: "rgba(255,255,255,0.5)" }}
+            >
+              {link.label}
+            </button>
+          ))}
+        </div>
+      )}
     </nav>
   )
 }

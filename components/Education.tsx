@@ -4,6 +4,21 @@ import { GraduationCap, Calendar, MapPin, Award, BookOpen, RefreshCw } from "luc
 import { useEducation } from "@/hooks/useEducation"
 import { useState } from "react"
 
+const MONO: React.CSSProperties = { fontFamily: "var(--font-mono)" }
+const CARD: React.CSSProperties = {
+  background: "rgba(255,255,255,0.025)",
+  border: "1px solid rgba(255,255,255,0.08)",
+  borderRadius: 16,
+}
+const ICON_BOX: React.CSSProperties = {
+  background: "rgba(59,130,246,0.1)",
+  border: "1px solid rgba(59,130,246,0.2)",
+  color: "#60A5FA",
+  borderRadius: 12,
+}
+
+import type React from "react"
+
 export default function Education() {
   const { education, loading, error, refreshEducation } = useEducation()
   const [refreshing, setRefreshing] = useState(false)
@@ -23,14 +38,16 @@ export default function Education() {
 
   if (error) {
     return (
-      <section id="education" className="py-20 bg-white dark:bg-gray-900">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center">
-            <p className="text-red-600 dark:text-red-400 mb-4">Failed to load education</p>
-            <button onClick={handleRefresh} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-              Try Again
-            </button>
-          </div>
+      <section id="education" className="py-24" style={{ background: "#0d0d0d" }}>
+        <div className="max-w-6xl mx-auto px-6 md:px-10 text-center">
+          <p className="text-sm mb-4" style={{ color: "rgba(248,113,113,0.9)" }}>Failed to load education</p>
+          <button
+            onClick={handleRefresh}
+            className="px-6 py-2 rounded-full text-sm font-bold text-white"
+            style={{ background: "#3B82F6" }}
+          >
+            Try Again
+          </button>
         </div>
       </section>
     )
@@ -38,111 +55,128 @@ export default function Education() {
 
   if (loading) {
     return (
-      <section id="education" className="py-20 bg-white dark:bg-gray-900">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-300">Loading education...</p>
-          </div>
+      <section id="education" className="py-24" style={{ background: "#0d0d0d" }}>
+        <div className="max-w-6xl mx-auto px-6 md:px-10 text-center">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-blue-500 mx-auto" />
+          <p className="mt-4 text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>Loading education…</p>
         </div>
       </section>
     )
   }
 
   return (
-    <section id="education" className="py-20 bg-white dark:bg-gray-900">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <h2 className="text-4xl font-bold">Education</h2>
+    <section id="education" className="py-24" style={{ background: "#0d0d0d" }}>
+      <div className="max-w-6xl mx-auto px-6 md:px-10">
+
+        {/* ── Section header ── */}
+        <div className="mb-14">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-medium tracking-[0.28em] uppercase mb-3"
+                 style={{ ...MONO, color: "#60A5FA" }}>
+                ( 05 ) &nbsp;Education
+              </p>
+              <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">Academic Path</h2>
+            </div>
             <button
               onClick={handleRefresh}
               disabled={refreshing}
-              className="p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="p-2 transition-colors"
+              style={{ color: "rgba(255,255,255,0.35)" }}
               title="Refresh education data"
             >
-              <RefreshCw className={`w-5 h-5 ${refreshing ? "animate-spin" : ""}`} />
+              <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
             </button>
           </div>
-          <div className="w-20 h-1 bg-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <div className="mt-5 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
+          <p className="mt-4 text-sm" style={{ color: "rgba(255,255,255,0.42)" }}>
             My academic journey and continuous learning path
           </p>
         </div>
 
-        <div className="space-y-8">
+        {/* ── Education cards ── */}
+        <div className="space-y-6">
           {education.map((edu) => (
-            <div
-              key={edu.id}
-              className="bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden"
-            >
-              <div className="p-8">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between">
-                  <div className="flex-1">
-                    <div className="flex items-start mb-4">
-                      <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center mr-4 flex-shrink-0">
-                        <GraduationCap className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <div className="flex-1">
-                        <h3 className="text-2xl font-bold text-gray-800 dark:text-white mb-1">{edu.degree}</h3>
-                        {edu.field_of_study && (
-                          <p className="text-lg text-blue-600 dark:text-blue-400 mb-2">{edu.field_of_study}</p>
-                        )}
-                        <p className="text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">{edu.institution}</p>
-                      </div>
+            <div key={edu.id} style={CARD} className="p-8">
+              <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+                <div className="flex-1">
+                  <div className="flex items-start gap-4 mb-5">
+                    <div className="w-11 h-11 flex items-center justify-center flex-shrink-0" style={ICON_BOX}>
+                      <GraduationCap className="w-5 h-5" />
                     </div>
-
-                    <div className="flex flex-wrap gap-4 mb-4 text-sm text-gray-600 dark:text-gray-400">
-                      <div className="flex items-center">
-                        <Calendar className="w-4 h-4 mr-2" />
-                        {formatDate(edu.start_date)} -{" "}
-                        {edu.is_current ? "Present" : edu.end_date ? formatDate(edu.end_date) : "Present"}
-                      </div>
-                      {edu.location && (
-                        <div className="flex items-center">
-                          <MapPin className="w-4 h-4 mr-2" />
-                          {edu.location}
-                        </div>
+                    <div>
+                      <h3 className="text-xl font-bold text-white leading-snug">{edu.degree}</h3>
+                      {edu.field_of_study && (
+                        <p className="text-sm mt-0.5" style={{ color: "#60A5FA" }}>{edu.field_of_study}</p>
                       )}
-                      {edu.grade && (
-                        <div className="flex items-center">
-                          <BookOpen className="w-4 h-4 mr-2" />
-                          {edu.grade}
-                        </div>
-                      )}
+                      <p className="text-sm font-semibold mt-1" style={{ color: "rgba(255,255,255,0.65)" }}>
+                        {edu.institution}
+                      </p>
                     </div>
+                  </div>
 
-                    {edu.description && (
-                      <p className="text-gray-600 dark:text-gray-300 mb-4 leading-relaxed">{edu.description}</p>
+                  {/* Metadata row */}
+                  <div className="flex flex-wrap gap-5 mb-5">
+                    <div className="flex items-center gap-2 text-xs" style={{ ...MONO, color: "rgba(255,255,255,0.38)" }}>
+                      <Calendar className="w-3.5 h-3.5" />
+                      {formatDate(edu.start_date)} —{" "}
+                      {edu.is_current ? "Present" : edu.end_date ? formatDate(edu.end_date) : "Present"}
+                    </div>
+                    {edu.location && (
+                      <div className="flex items-center gap-2 text-xs" style={{ ...MONO, color: "rgba(255,255,255,0.38)" }}>
+                        <MapPin className="w-3.5 h-3.5" />
+                        {edu.location}
+                      </div>
                     )}
-
-                    {edu.achievements && edu.achievements.length > 0 && (
-                      <div>
-                        <h4 className="font-semibold text-gray-800 dark:text-white mb-3 flex items-center">
-                          <Award className="w-5 h-5 mr-2 text-yellow-500" />
-                          Key Achievements
-                        </h4>
-                        <ul className="space-y-2">
-                          {edu.achievements.map((achievement, achievementIndex) => (
-                            <li key={achievementIndex} className="flex items-start text-gray-600 dark:text-gray-300">
-                              <div className="w-2 h-2 bg-blue-600 rounded-full mt-2 mr-3 flex-shrink-0"></div>
-                              {achievement}
-                            </li>
-                          ))}
-                        </ul>
+                    {edu.grade && (
+                      <div className="flex items-center gap-2 text-xs" style={{ ...MONO, color: "rgba(255,255,255,0.38)" }}>
+                        <BookOpen className="w-3.5 h-3.5" />
+                        {edu.grade}
                       </div>
                     )}
                   </div>
 
-                  {edu.is_current && (
-                    <div className="mt-4 lg:mt-0 lg:ml-6">
-                      <span className="inline-flex items-center px-3 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-sm font-medium rounded-full">
-                        <div className="w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></div>
-                        Currently Enrolled
-                      </span>
+                  {edu.description && (
+                    <p className="text-sm leading-relaxed mb-5" style={{ color: "rgba(255,255,255,0.55)" }}>
+                      {edu.description}
+                    </p>
+                  )}
+
+                  {edu.achievements && edu.achievements.length > 0 && (
+                    <div>
+                      <p className="text-xs font-semibold mb-3 flex items-center gap-2"
+                         style={{ ...MONO, color: "rgba(255,255,255,0.45)" }}>
+                        <Award className="w-3.5 h-3.5" style={{ color: "#60A5FA" }} />
+                        Key Achievements
+                      </p>
+                      <ul className="space-y-2">
+                        {edu.achievements.map((achievement, i) => (
+                          <li key={i} className="flex items-start gap-3 text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
+                            <div className="w-1.5 h-1.5 rounded-full mt-1.5 flex-shrink-0" style={{ background: "#3B82F6" }} />
+                            {achievement}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
                   )}
                 </div>
+
+                {edu.is_current && (
+                  <div className="flex-shrink-0">
+                    <span
+                      className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold"
+                      style={{
+                        background: "rgba(34,197,94,0.08)",
+                        border: "1px solid rgba(34,197,94,0.2)",
+                        color: "rgba(74,222,128,0.9)",
+                        ...MONO,
+                      }}
+                    >
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                      Enrolled
+                    </span>
+                  </div>
+                )}
               </div>
             </div>
           ))}

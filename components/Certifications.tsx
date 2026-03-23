@@ -1,8 +1,22 @@
 "use client"
 
+import type React from "react"
 import { useState } from "react"
 import { Award, Calendar, ExternalLink, Star, CheckCircle, RefreshCw } from "lucide-react"
 import { useCertifications } from "@/hooks/useCertifications"
+
+const MONO: React.CSSProperties = { fontFamily: "var(--font-mono)" }
+const CARD: React.CSSProperties = {
+  background: "rgba(255,255,255,0.025)",
+  border: "1px solid rgba(255,255,255,0.08)",
+  borderRadius: 16,
+}
+const ICON_BOX: React.CSSProperties = {
+  background: "rgba(59,130,246,0.1)",
+  border: "1px solid rgba(59,130,246,0.2)",
+  color: "#60A5FA",
+  borderRadius: 12,
+}
 
 export default function Certifications() {
   const { certifications, loading, error, refreshCertifications } = useCertifications()
@@ -35,14 +49,16 @@ export default function Certifications() {
 
   if (error) {
     return (
-      <section id="certifications" className="py-20 bg-gray-50 dark:bg-gray-800">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center">
-            <p className="text-red-600 dark:text-red-400 mb-4">Failed to load certifications</p>
-            <button onClick={handleRefresh} className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg">
-              Try Again
-            </button>
-          </div>
+      <section id="certifications" className="py-24" style={{ background: "#0a0a0a" }}>
+        <div className="max-w-6xl mx-auto px-6 md:px-10 text-center">
+          <p className="text-sm mb-4" style={{ color: "rgba(248,113,113,0.9)" }}>Failed to load certifications</p>
+          <button
+            onClick={handleRefresh}
+            className="px-6 py-2 rounded-full text-sm font-bold text-white"
+            style={{ background: "#3B82F6" }}
+          >
+            Try Again
+          </button>
         </div>
       </section>
     )
@@ -50,175 +66,186 @@ export default function Certifications() {
 
   if (loading) {
     return (
-      <section id="certifications" className="py-20 bg-gray-50 dark:bg-gray-800">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto"></div>
-            <p className="mt-4 text-gray-600 dark:text-gray-300">Loading certifications...</p>
-          </div>
+      <section id="certifications" className="py-24" style={{ background: "#0a0a0a" }}>
+        <div className="max-w-6xl mx-auto px-6 md:px-10 text-center">
+          <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-blue-500 mx-auto" />
+          <p className="mt-4 text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>Loading certifications…</p>
         </div>
       </section>
     )
   }
 
+  const filterBtnStyle = (active: boolean): React.CSSProperties =>
+    active
+      ? { background: "#2563EB", color: "#fff", border: "1px solid #3B82F6" }
+      : { background: "rgba(255,255,255,0.04)", color: "rgba(255,255,255,0.55)", border: "1px solid rgba(255,255,255,0.08)" }
+
   return (
-    <section id="certifications" className="py-20 bg-gray-50 dark:bg-gray-800">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center mb-16">
-          <div className="flex items-center justify-center gap-4 mb-4">
-            <h2 className="text-4xl font-bold">Certifications</h2>
+    <section id="certifications" className="py-24" style={{ background: "#0a0a0a" }}>
+      <div className="max-w-6xl mx-auto px-6 md:px-10">
+
+        {/* ── Section header ── */}
+        <div className="mb-14">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[10px] font-medium tracking-[0.28em] uppercase mb-3"
+                 style={{ ...MONO, color: "#60A5FA" }}>
+                ( 06 ) &nbsp;Credentials
+              </p>
+              <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">Certifications</h2>
+            </div>
             <button
               onClick={handleRefresh}
               disabled={refreshing}
-              className="p-2 text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+              className="p-2 transition-colors"
+              style={{ color: "rgba(255,255,255,0.35)" }}
               title="Refresh certifications data"
             >
-              <RefreshCw className={`w-5 h-5 ${refreshing ? "animate-spin" : ""}`} />
+              <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
             </button>
           </div>
-          <div className="w-20 h-1 bg-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+          <div className="mt-5 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
+          <p className="mt-4 text-sm" style={{ color: "rgba(255,255,255,0.42)" }}>
             Professional certifications and credentials that validate my expertise
           </p>
         </div>
 
-        {/* Filter Buttons */}
-        <div className="flex justify-center gap-4 mb-12">
-          <button
-            onClick={() => setFilter("all")}
-            className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
-              filter === "all"
-                ? "bg-blue-600 text-white"
-                : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600"
-            }`}
-          >
-            All ({certifications.length})
-          </button>
-          <button
-            onClick={() => setFilter("featured")}
-            className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
-              filter === "featured"
-                ? "bg-blue-600 text-white"
-                : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600"
-            }`}
-          >
-            Featured ({certifications.filter((c) => c.is_featured).length})
-          </button>
-          <button
-            onClick={() => setFilter("active")}
-            className={`px-6 py-2 rounded-full text-sm font-medium transition-colors ${
-              filter === "active"
-                ? "bg-blue-600 text-white"
-                : "bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600"
-            }`}
-          >
-            Active ({certifications.filter((c) => isActive(c)).length})
-          </button>
+        {/* ── Filter pills ── */}
+        <div className="flex gap-3 mb-12 flex-wrap">
+          {(["all", "featured", "active"] as const).map((f) => {
+            const count =
+              f === "all" ? certifications.length
+              : f === "featured" ? certifications.filter((c) => c.is_featured).length
+              : certifications.filter((c) => isActive(c)).length
+            return (
+              <button
+                key={f}
+                onClick={() => setFilter(f)}
+                className="px-5 py-2 rounded-full text-xs font-semibold capitalize transition-all"
+                style={{ ...MONO, ...filterBtnStyle(filter === f) }}
+              >
+                {f} ({count})
+              </button>
+            )
+          })}
         </div>
 
-        {/* Certifications Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* ── Certifications grid ── */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredCertifications.map((cert) => (
             <div
               key={cert.id}
-              className={`bg-white dark:bg-gray-900 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden ${
-                cert.is_featured ? "ring-2 ring-blue-200 dark:ring-blue-800" : ""
-              }`}
+              style={{
+                ...CARD,
+                ...(cert.is_featured ? { border: "1px solid rgba(59,130,246,0.25)" } : {}),
+              }}
+              className="p-6 flex flex-col"
             >
-              <div className="p-6">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900 rounded-lg flex items-center justify-center flex-shrink-0">
-                    <Award className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {cert.is_featured && <Star className="w-5 h-5 text-yellow-500 fill-current" />}
-                    {isActive(cert) && <CheckCircle className="w-5 h-5 text-green-500" />}
-                  </div>
+              {/* Card top row */}
+              <div className="flex items-start justify-between mb-5">
+                <div className="w-11 h-11 flex items-center justify-center flex-shrink-0" style={ICON_BOX}>
+                  <Award className="w-5 h-5" />
                 </div>
+                <div className="flex items-center gap-2">
+                  {cert.is_featured && <Star className="w-4 h-4 fill-current" style={{ color: "#FBBF24" }} />}
+                  {isActive(cert) && <CheckCircle className="w-4 h-4" style={{ color: "#4ADE80" }} />}
+                </div>
+              </div>
 
-                <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-2">{cert.name}</h3>
+              <h3 className="text-base font-bold text-white mb-1 leading-snug">{cert.name}</h3>
+              <p className="text-sm mb-4" style={{ color: "#60A5FA" }}>{cert.issuing_organization}</p>
 
-                <p className="text-lg font-semibold text-blue-600 dark:text-blue-400 mb-3">
-                  {cert.issuing_organization}
+              <div className="flex items-center gap-2 text-xs mb-4" style={{ ...MONO, color: "rgba(255,255,255,0.38)" }}>
+                <Calendar className="w-3.5 h-3.5 flex-shrink-0" />
+                <span>
+                  Issued {formatDate(cert.issue_date)}
+                  {cert.expiration_date && <> · Expires {formatDate(cert.expiration_date)}</>}
+                </span>
+              </div>
+
+              {cert.description && (
+                <p className="text-xs leading-relaxed mb-4 flex-1" style={{ color: "rgba(255,255,255,0.45)" }}>
+                  {cert.description}
                 </p>
+              )}
 
-                <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-3">
-                  <Calendar className="w-4 h-4 mr-2" />
-                  Issued: {formatDate(cert.issue_date)}
-                  {cert.expiration_date && (
-                    <>
-                      <br />
-                      Expires: {formatDate(cert.expiration_date)}
-                    </>
-                  )}
-                </div>
-
-                {cert.description && (
-                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 leading-relaxed">{cert.description}</p>
-                )}
-
-                {cert.skills && cert.skills.length > 0 && (
-                  <div className="mb-4">
-                    <h4 className="text-sm font-semibold text-gray-800 dark:text-white mb-2">Skills Validated:</h4>
-                    <div className="flex flex-wrap gap-1">
-                      {cert.skills.slice(0, 4).map((skill, index) => (
-                        <span
-                          key={index}
-                          className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                      {cert.skills.length > 4 && (
-                        <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded">
-                          +{cert.skills.length - 4} more
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                )}
-
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    {!isActive(cert) && (
-                      <span className="px-2 py-1 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200 text-xs rounded-full">
-                        Expired
-                      </span>
-                    )}
-                    {isActive(cert) && (
-                      <span className="px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs rounded-full">
-                        Active
-                      </span>
-                    )}
-                  </div>
-
-                  {cert.credential_url && (
-                    <a
-                      href={cert.credential_url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 text-sm font-medium"
+              {cert.skills && cert.skills.length > 0 && (
+                <div className="flex flex-wrap gap-1.5 mb-5">
+                  {cert.skills.slice(0, 4).map((skill, i) => (
+                    <span
+                      key={i}
+                      className="px-2 py-0.5 text-[10px] rounded"
+                      style={{
+                        ...MONO,
+                        background: "rgba(59,130,246,0.08)",
+                        border: "1px solid rgba(59,130,246,0.15)",
+                        color: "rgba(255,255,255,0.55)",
+                      }}
                     >
-                      Verify
-                      <ExternalLink className="w-4 h-4 ml-1" />
-                    </a>
+                      {skill}
+                    </span>
+                  ))}
+                  {cert.skills.length > 4 && (
+                    <span
+                      className="px-2 py-0.5 text-[10px] rounded"
+                      style={{
+                        ...MONO,
+                        background: "rgba(255,255,255,0.04)",
+                        border: "1px solid rgba(255,255,255,0.08)",
+                        color: "rgba(255,255,255,0.35)",
+                      }}
+                    >
+                      +{cert.skills.length - 4} more
+                    </span>
                   )}
                 </div>
+              )}
 
-                {cert.credential_id && (
-                  <div className="mt-3 pt-3 border-t border-gray-200 dark:border-gray-700">
-                    <p className="text-xs text-gray-500 dark:text-gray-400">ID: {cert.credential_id}</p>
-                  </div>
+              {/* Card footer */}
+              <div
+                className="flex items-center justify-between pt-4"
+                style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}
+              >
+                <span
+                  className="px-2.5 py-1 text-[10px] rounded-full font-semibold"
+                  style={
+                    isActive(cert)
+                      ? { ...MONO, background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)", color: "rgba(74,222,128,0.9)" }
+                      : { ...MONO, background: "rgba(239,68,68,0.08)", border: "1px solid rgba(239,68,68,0.2)", color: "rgba(248,113,113,0.9)" }
+                  }
+                >
+                  {isActive(cert) ? "Active" : "Expired"}
+                </span>
+
+                {cert.credential_url && (
+                  <a
+                    href={cert.credential_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-1 text-xs font-semibold transition-colors hover:opacity-70"
+                    style={{ color: "#60A5FA" }}
+                  >
+                    Verify
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </a>
                 )}
               </div>
+
+              {cert.credential_id && (
+                <p className="mt-3 text-[10px]" style={{ ...MONO, color: "rgba(255,255,255,0.22)" }}>
+                  ID: {cert.credential_id}
+                </p>
+              )}
             </div>
           ))}
         </div>
 
         {filteredCertifications.length === 0 && (
-          <div className="text-center py-12">
-            <Award className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-            <p className="text-gray-600 dark:text-gray-300">No certifications found for the selected filter.</p>
+          <div className="text-center py-16">
+            <Award className="w-12 h-12 mx-auto mb-4" style={{ color: "rgba(255,255,255,0.15)" }} />
+            <p className="text-sm" style={{ color: "rgba(255,255,255,0.35)" }}>
+              No certifications found for the selected filter.
+            </p>
           </div>
         )}
       </div>
