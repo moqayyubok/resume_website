@@ -365,6 +365,10 @@ REMEMBER:
     });
     
     const data = await response.json();
+    if (!response.ok) {
+      const errMsg = typeof data?.error === "string" ? data.error : (typeof data?.error?.message === "string" ? data.error.message : `Groq error ${response.status}`);
+      return NextResponse.json({ error: errMsg }, { status: response.status });
+    }
     return NextResponse.json(data);
   } catch (error: any) {
     console.error("Chatbot API error:", error);

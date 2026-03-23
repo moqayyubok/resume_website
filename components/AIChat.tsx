@@ -67,7 +67,11 @@ export default function AIChat() {
 
       if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`)
       const data = await res.json()
-      if (data.error) throw new Error(typeof data.error === "string" ? data.error : (data.error.message ?? JSON.stringify(data.error)))
+      if (data.error) {
+        const e = data.error
+        const msg = typeof e === "string" ? e : typeof e?.message === "string" ? e.message : JSON.stringify(e) || "API error"
+        throw new Error(msg)
+      }
 
       const raw =
         data.choices?.[0]?.message?.content ||
