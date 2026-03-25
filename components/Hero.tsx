@@ -158,16 +158,16 @@ export default function Hero() {
           TOP METADATA BAR — editorial header
       ═══════════════════════════════════════════════════════════════════ */}
       <motion.div
-        className={`${mono.className} relative flex items-center justify-between px-6 md:px-14 lg:px-20 pt-24 pb-0`}
+        className={`${mono.className} relative flex items-center justify-between px-6 md:px-14 lg:px-20 pt-24 pb-0 gap-4`}
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1, duration: 0.7 }}
       >
-        <span className="text-[10px] tracking-[0.3em] uppercase" style={{ color: DIM }}>
+        <span className="text-[10px] tracking-[0.3em] uppercase truncate min-w-0" style={{ color: DIM }}>
           Portfolio&nbsp;—&nbsp;2026&nbsp;·&nbsp;Birmingham,&nbsp;UK
         </span>
         <span
-          className="flex items-center gap-2 text-[10px] tracking-[0.25em] uppercase"
+          className="flex items-center gap-2 text-[10px] tracking-[0.25em] uppercase flex-shrink-0"
           style={{ color: DIM }}
         >
           {/* Pulsing availability dot */}
@@ -343,7 +343,7 @@ export default function Hero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.72, duration: 0.75, ease: EASE }}
-            className="flex items-center gap-3"
+            className="flex flex-wrap items-center gap-3"
           >
             <a
               href="/Qayyum_Bokhari_CV.docx"

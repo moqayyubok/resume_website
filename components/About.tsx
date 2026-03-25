@@ -14,11 +14,11 @@ export default function About() {
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">About Me</h2>
           <div className="mt-5 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />
         </div>
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="overflow-hidden" style={{ borderRadius: 16, border: "1px solid rgba(255,255,255,0.07)", aspectRatio: "4/5" }}>
-            <Image src="/Mypicture.jpg" alt="Qayyum Bokhari" width={480} height={600} className="w-full h-full object-cover object-center hover:scale-105 transition-transform duration-500" />
+        <div className="grid md:grid-cols-2 gap-10 md:gap-12 items-center">
+          <div className="overflow-hidden order-2 md:order-1" style={{ borderRadius: 16, border: "1px solid rgba(255,255,255,0.07)", aspectRatio: "4/5", maxHeight: "min(70vw, 480px)" }}>
+            <Image src="/Mypicture.jpg" alt="Qayyum Bokhari" width={480} height={600} className="w-full h-full object-cover object-top hover:scale-105 transition-transform duration-500" />
           </div>
-          <div className="space-y-5">
+          <div className="space-y-5 order-1 md:order-2">
             <h3 className="text-xl font-bold text-white leading-snug">Commercial Experience. Production-Ready. Always Building.</h3>
             <p className="leading-relaxed text-sm" style={{ color: "rgba(255,255,255,0.55)" }}>
               I&apos;m a Software Engineer with commercial experience building production web applications and AI-powered systems. I&apos;ve delivered measurable results including a 23% reduction in client return rates through predictive analytics and a 35% improvement in backend performance through strategic optimisation.

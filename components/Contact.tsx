@@ -127,7 +127,7 @@ export default function Contact() {
                 <input type="text" id="website" name="website" value={formData.website} onChange={handleChange} tabIndex={-1} autoComplete="off" />
               </div>
 
-              <div className="grid md:grid-cols-2 gap-5">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
                   <label htmlFor="name" className="block text-xs font-semibold mb-2"
                          style={{ ...MONO, color: "rgba(255,255,255,0.45)" }}>
