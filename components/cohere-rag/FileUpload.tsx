@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useState } from "react";
 
 interface Props {
   onUpload: (file: File) => Promise<void>;
@@ -10,7 +10,6 @@ interface Props {
 }
 
 export function FileUpload({ onUpload, onReset, documentLoaded, uploading }: Props) {
-  const inputRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
 
   const handleFiles = (files: FileList | null) => {
@@ -42,50 +41,46 @@ export function FileUpload({ onUpload, onReset, documentLoaded, uploading }: Pro
   }
 
   return (
-    <>
+    <label
+      onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+      onDragLeave={() => setDragOver(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setDragOver(false);
+        handleFiles(e.dataTransfer.files);
+      }}
+      className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all
+        border ${dragOver
+          ? "border-indigo-400 bg-indigo-900/30 text-indigo-300"
+          : "border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500"
+        } ${uploading ? "opacity-60 pointer-events-none" : "cursor-pointer"}`}
+      title="Upload a PDF or text document"
+    >
       <input
-        ref={inputRef}
         type="file"
         accept=".pdf,.txt"
         className="hidden"
-        onChange={(e) => handleFiles(e.target.files)}
-      />
-      <button
-        onClick={() => inputRef.current?.click()}
         disabled={uploading}
-        onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
-        onDragLeave={() => setDragOver(false)}
-        onDrop={(e) => {
-          e.preventDefault();
-          setDragOver(false);
-          handleFiles(e.dataTransfer.files);
-        }}
-        className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-all
-          border ${dragOver
-            ? "border-indigo-400 bg-indigo-900/30 text-indigo-300"
-            : "border-zinc-700 bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white hover:border-zinc-500"
-          } ${uploading ? "opacity-60 cursor-not-allowed" : "cursor-pointer"}`}
-        title="Upload a PDF or text document"
-      >
-        {uploading ? (
-          <>
-            <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor"
-                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
-            Processing…
-          </>
-        ) : (
-          <>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
-                d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
-            </svg>
-            Upload document
-          </>
-        )}
-      </button>
-    </>
+        onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }}
+      />
+      {uploading ? (
+        <>
+          <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+            <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+            <path className="opacity-75" fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+          </svg>
+          Processing…
+        </>
+      ) : (
+        <>
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+              d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+          </svg>
+          Upload document
+        </>
+      )}
+    </label>
   );
 }
