@@ -59,7 +59,7 @@ export function FileUpload({ onUpload, onReset, documentLoaded, uploading }: Pro
       <input
         type="file"
         accept=".pdf,.txt"
-        className="hidden"
+        className="sr-only"
         disabled={uploading}
         onChange={(e) => { handleFiles(e.target.files); e.target.value = ""; }}
       />
