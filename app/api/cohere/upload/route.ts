@@ -32,8 +32,9 @@ export async function POST(req: Request) {
     const bytes = await file.arrayBuffer();
 
     if (name.endsWith(".pdf")) {
-      const pdfParse = (await import("pdf-parse")).default;
-      const result = await pdfParse(Buffer.from(bytes));
+      const { PDFParse } = await import("pdf-parse");
+      const parser = new PDFParse({ data: Buffer.from(bytes) });
+      const result = await parser.getText();
       text = result.text;
     } else {
       text = new TextDecoder("utf-8").decode(bytes);

@@ -105,7 +105,7 @@ export default function CohereRagPage() {
     } finally {
       setLoading(false);
     }
-  }, [input, loading]);
+  }, [input, loading, docContext]);
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
