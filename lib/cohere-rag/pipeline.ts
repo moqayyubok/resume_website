@@ -26,52 +26,57 @@ function getClient(): CohereClient {
 }
 
 // ---------------------------------------------------------------------------
-// In-memory state
+// Public API — fully stateless (no module-level state)
 // ---------------------------------------------------------------------------
 
-let _chunks: string[] = [];
-let _embeddings: number[][] = [];   // L2-normalised, shape [N, 1024]
+export interface IngestResult {
+  chunks: string[];
+  embeddings: number[][];
+  chunk_count: number;
+}
 
-// ---------------------------------------------------------------------------
-// Public API
-// ---------------------------------------------------------------------------
+export interface QueryResult {
+  answer: string;
+  citations: Array<{ start: number; end: number; text: string; document_ids: string[] }>;
+  source_chunks: Array<{ id: string; text: string; relevance_score: number }>;
+}
 
-/** Chunk, embed, and index a document. Returns chunk count. */
-export async function ingestDocument(text: string): Promise<number> {
+/** Chunk and embed a document. Returns chunks + embeddings to be stored client-side. */
+export async function ingestDocument(text: string): Promise<IngestResult> {
   const co = getClient();
 
   const chunks = chunkText(text);
   if (chunks.length === 0) throw new Error("No text could be extracted from the document.");
 
-  const vecs = await embed(co, chunks, "search_document");
-  normalizeAll(vecs);
+  const embeddings = await embed(co, chunks, "search_document");
+  normalizeAll(embeddings);
 
-  _chunks = chunks;
-  _embeddings = vecs;
-
-  return chunks.length;
+  return { chunks, embeddings, chunk_count: chunks.length };
 }
 
-/** Run the full retrieve → rerank → generate pipeline. */
-export async function queryDocument(query: string): Promise<{
-  answer: string;
-  citations: Array<{ start: number; end: number; text: string; document_ids: string[] }>;
-  source_chunks: Array<{ id: string; text: string; relevance_score: number }>;
-}> {
-  if (_chunks.length === 0) throw new Error("No document has been loaded.");
+/**
+ * Stateless retrieve → rerank → generate pipeline.
+ * Caller passes chunks + embeddings (received from ingestDocument).
+ */
+export async function queryWithContext(
+  query: string,
+  chunks: string[],
+  embeddings: number[][],
+): Promise<QueryResult> {
+  if (chunks.length === 0) throw new Error("No document context provided.");
 
   const co = getClient();
 
-  // ---- Step 2 (query): embed query ----------------------------------------
+  // ---- Embed query ---------------------------------------------------------
   const [qVec] = await embed(co, [query], "search_query");
   normalizeAll([qVec]);
 
-  // ---- Step 3: top-10 cosine similarity ------------------------------------
-  const k = Math.min(10, _chunks.length);
-  const topIndices = topK(qVec, _embeddings, k);
-  const candidateTexts = topIndices.map((i) => _chunks[i]);
+  // ---- Top-10 cosine similarity --------------------------------------------
+  const k = Math.min(10, chunks.length);
+  const topIndices = topK(qVec, embeddings, k);
+  const candidateTexts = topIndices.map((i) => chunks[i]);
 
-  // ---- Step 4: rerank → top-3 ----------------------------------------------
+  // ---- Rerank → top-3 ------------------------------------------------------
   const rerankResp = await co.rerank({
     model: "rerank-english-v3.0",
     query,
@@ -85,7 +90,7 @@ export async function queryDocument(query: string): Promise<{
     relevance_score: r.relevanceScore,
   }));
 
-  // ---- Step 5: grounded generation -----------------------------------------
+  // ---- Grounded generation -------------------------------------------------
   const documents = topChunks.map((c) => ({ id: c.id, text: c.text }));
 
   const chatResp = await co.chat({
@@ -98,25 +103,10 @@ export async function queryDocument(query: string): Promise<{
     start: cit.start,
     end: cit.end,
     text: cit.text,
-    document_ids: cit.documentIds,   // TS SDK uses camelCase; frontend expects snake_case
+    document_ids: cit.documentIds,
   }));
 
-  return {
-    answer: chatResp.text,
-    citations,
-    source_chunks: topChunks,
-  };
-}
-
-/** Clear in-memory state so a new document can be uploaded. */
-export function reset(): void {
-  _chunks = [];
-  _embeddings = [];
-}
-
-/** Whether a document is currently loaded. */
-export function hasDocument(): boolean {
-  return _chunks.length > 0;
+  return { answer: chatResp.text, citations, source_chunks: topChunks };
 }
 
 // ---------------------------------------------------------------------------

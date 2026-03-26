@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { rateLimit, getClientIP } from "@/lib/rate-limit";
-import { queryDocument, hasDocument } from "@/lib/cohere-rag/pipeline";
+import { queryWithContext } from "@/lib/cohere-rag/pipeline";
 
 const MAX_QUERY_LENGTH = 1000;
 
@@ -13,6 +13,8 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const query: unknown = body?.query;
+    const chunks: unknown = body?.chunks;
+    const embeddings: unknown = body?.embeddings;
 
     if (typeof query !== "string" || !query.trim()) {
       return NextResponse.json({ error: "query must be a non-empty string." }, { status: 400 });
@@ -25,14 +27,21 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!hasDocument()) {
+    if (!Array.isArray(chunks) || chunks.length === 0) {
       return NextResponse.json(
         { error: "Please upload a document first." },
         { status: 400 },
       );
     }
 
-    const result = await queryDocument(query.trim());
+    if (!Array.isArray(embeddings) || embeddings.length !== chunks.length) {
+      return NextResponse.json(
+        { error: "Invalid document context. Please re-upload your document." },
+        { status: 400 },
+      );
+    }
+
+    const result = await queryWithContext(query.trim(), chunks as string[], embeddings as number[][]);
     return NextResponse.json(result);
   } catch (err: unknown) {
     console.error("[cohere/chat]", err);

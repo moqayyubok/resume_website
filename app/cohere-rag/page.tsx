@@ -18,6 +18,8 @@ export default function CohereRagPage() {
   const [documentLoaded, setDocumentLoaded] = useState(false);
   const [docName, setDocName] = useState("");
   const [activeCitation, setActiveCitation] = useState<{ chunk: SourceChunk; num: number } | null>(null);
+  // Store chunks+embeddings client-side so queries work across serverless instances
+  const [docContext, setDocContext] = useState<{ chunks: string[]; embeddings: number[][] } | null>(null);
 
   // ------------------------------------------------------------------
   // Upload
@@ -31,6 +33,7 @@ export default function CohereRagPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Upload failed");
 
+      setDocContext({ chunks: data.chunks, embeddings: data.embeddings });
       setDocumentLoaded(true);
       setDocName(data.filename);
       setMessages([]);
@@ -55,8 +58,8 @@ export default function CohereRagPage() {
   // ------------------------------------------------------------------
   // Reset
   // ------------------------------------------------------------------
-  const handleReset = useCallback(async () => {
-    await fetch("/api/cohere/reset", { method: "POST" });
+  const handleReset = useCallback(() => {
+    setDocContext(null);
     setDocumentLoaded(false);
     setDocName("");
     setMessages([]);
@@ -68,7 +71,7 @@ export default function CohereRagPage() {
   // ------------------------------------------------------------------
   const handleSend = useCallback(async () => {
     const query = input.trim();
-    if (!query || loading) return;
+    if (!query || loading || !docContext) return;
 
     setInput("");
     setActiveCitation(null);
@@ -79,7 +82,7 @@ export default function CohereRagPage() {
       const res = await fetch("/api/cohere/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ query }),
+        body: JSON.stringify({ query, chunks: docContext.chunks, embeddings: docContext.embeddings }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Query failed");

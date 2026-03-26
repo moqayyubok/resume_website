@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { rateLimit, getClientIP } from "@/lib/rate-limit";
-import { ingestDocument, reset } from "@/lib/cohere-rag/pipeline";
+import { ingestDocument } from "@/lib/cohere-rag/pipeline";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 
@@ -32,7 +32,6 @@ export async function POST(req: Request) {
     const bytes = await file.arrayBuffer();
 
     if (name.endsWith(".pdf")) {
-      // Dynamically import pdf-parse (CommonJS, needs dynamic import in ESM context)
       const pdfParse = (await import("pdf-parse")).default;
       const result = await pdfParse(Buffer.from(bytes));
       text = result.text;
@@ -45,14 +44,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "No readable text found in the file." }, { status: 400 });
     }
 
-    // Clear any previous document before ingesting
-    reset();
-    const chunkCount = await ingestDocument(text);
+    // Chunk + embed — returns everything the client needs for stateless queries
+    const { chunks, embeddings, chunk_count } = await ingestDocument(text);
 
     return NextResponse.json({
       message: "Document ingested successfully.",
-      chunk_count: chunkCount,
+      chunk_count,
       filename: file.name,
+      chunks,
+      embeddings,
     });
   } catch (err: unknown) {
     console.error("[cohere/upload]", err);
