@@ -244,6 +244,17 @@ export const projects: Project[] = [
     demo: "/cohere-rag",
     featured: true,
   },
+  {
+    title: "MapCanvas",
+    description:
+      "Interactive e-commerce platform that lets users design and buy custom maps of their favourite village, town, or city. Built with MapBox for map rendering and Gelato API for print-on-demand fulfilment. Users customise their map style, framing, and location then order physical prints delivered worldwide.",
+    result: "Generated over 40,000 maps across 35+ countries since launch.",
+    tech: ["React", "MapBox API", "Gelato API", "E-commerce", "Vercel"],
+    icon: <Globe className="w-8 h-8" />,
+    github: "#",
+    demo: "https://mapcanvas.store",
+    featured: true,
+  },
 ]
 
 // Blog Posts Data
