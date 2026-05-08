@@ -46,7 +46,7 @@ Visit: `https://your-site.vercel.app/api/test-deployment`
   "message": "Deployment test - Changes are live!",
   "commitHash": "02d409a",
   "changes": {
-    "cvButton": "Fixed to Qayyum_Bokharicv.pdf",
+    "cvButton": "Fixed to Qayyum_Bokhari_CV.docx",
     "contactForm": "Has API endpoint at /api/contact",
     "chatbot": "Improved personality with temperature 0.9",
     "seedEndpoint": "Available at /api/seed"
@@ -59,7 +59,7 @@ If you see this, deployment is working!
 ### Test 2: CV Download Button
 1. Go to About section
 2. Click "Download CV" button
-3. Should download `Qayyum_Bokharicv.pdf`
+3. Should download `Qayyum_Bokhari_CV.docx`
 
 ### Test 3: Contact Form
 1. Go to Contact section
