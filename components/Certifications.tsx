@@ -110,25 +110,27 @@ export default function Certifications() {
           </p>
         </div>
 
-        {/* ── Filter pills ── */}
-        <div className="flex gap-3 mb-12 flex-wrap">
-          {(["all", "featured", "active"] as const).map((f) => {
-            const count =
-              f === "all" ? certifications.length
-              : f === "featured" ? certifications.filter((c) => c.is_featured).length
-              : certifications.filter((c) => isActive(c)).length
-            return (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className="px-5 py-2 rounded-full text-xs font-semibold capitalize transition-all"
-                style={{ ...MONO, ...filterBtnStyle(filter === f) }}
-              >
-                {f} ({count})
-              </button>
-            )
-          })}
-        </div>
+        {/* ── Filter pills (only worth showing once there are enough certs to filter) ── */}
+        {certifications.length >= 4 && (
+          <div className="flex gap-3 mb-12 flex-wrap">
+            {(["all", "featured", "active"] as const).map((f) => {
+              const count =
+                f === "all" ? certifications.length
+                : f === "featured" ? certifications.filter((c) => c.is_featured).length
+                : certifications.filter((c) => isActive(c)).length
+              return (
+                <button
+                  key={f}
+                  onClick={() => setFilter(f)}
+                  className="px-5 py-2 rounded-full text-xs font-semibold capitalize transition-all"
+                  style={{ ...MONO, ...filterBtnStyle(filter === f) }}
+                >
+                  {f} ({count})
+                </button>
+              )
+            })}
+          </div>
+        )}
 
         {/* ── Certifications grid ── */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
