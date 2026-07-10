@@ -11,7 +11,7 @@ export default function Projects() {
       <div className="max-w-6xl mx-auto px-6 md:px-10">
         <div className="mb-14">
           <p className="text-[10px] font-medium tracking-[0.28em] uppercase mb-3" style={{ ...MONO, color: "#60A5FA" }}>
-            ( 04 ) &nbsp;Work
+            ( 03 ) &nbsp;Work
           </p>
           <h2 className="text-4xl md:text-5xl font-extrabold tracking-tight text-white">Featured Projects</h2>
           <div className="mt-5 h-px" style={{ background: "rgba(255,255,255,0.07)" }} />

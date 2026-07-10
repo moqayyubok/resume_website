@@ -2,8 +2,8 @@
 
 import type React from "react"
 import { useState } from "react"
-import { Send } from "lucide-react"
-import { contactInfo } from "@/data/data"
+import { Send, Calendar } from "lucide-react"
+import { contactInfo, socialLinks } from "@/data/data"
 
 const MONO: React.CSSProperties = { fontFamily: "var(--font-mono)" }
 
@@ -103,6 +103,47 @@ export default function Contact() {
                   </div>
                 </div>
               ))}
+            </div>
+
+            {/* Social links — recruiters click straight through to code */}
+            <div className="mt-8">
+              <p className="text-[10px] tracking-wider uppercase font-medium mb-3"
+                 style={{ ...MONO, color: "rgba(255,255,255,0.35)" }}>
+                Connect
+              </p>
+              <div className="flex gap-3">
+                {socialLinks.map((social, i) => (
+                  <a
+                    key={i}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
+                    className="w-10 h-10 flex items-center justify-center rounded-xl transition-colors hover:text-blue-400"
+                    style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)", color: "rgba(255,255,255,0.55)" }}
+                  >
+                    {social.icon}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Book a call — high-intent scheduling shortcut */}
+            <div className="mt-8">
+              <p className="text-[10px] tracking-wider uppercase font-medium mb-3"
+                 style={{ ...MONO, color: "rgba(255,255,255,0.35)" }}>
+                Prefer to talk?
+              </p>
+              <a
+                href="https://cal.com/abdul-qayyum-bokhari-wssfep/30min"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2.5 px-5 py-3 rounded-xl text-sm font-bold text-white transition-all hover:brightness-110"
+                style={{ background: "#3B82F6" }}
+              >
+                <Calendar className="w-4 h-4" />
+                Book a 30-min call
+              </a>
             </div>
           </div>
 
