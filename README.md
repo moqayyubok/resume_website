@@ -1,6 +1,6 @@
 # Personal Portfolio Website
 
-My personal portfolio website showcasing my projects, skills, blog posts, and professional experience. Built with Next.js 14, TypeScript, and Tailwind CSS.
+My personal portfolio website showcasing my projects, skills, blog posts, and professional experience. Built with Next.js 16, TypeScript, and Tailwind CSS.
 
 ## Live Site
 
@@ -24,7 +24,7 @@ My personal portfolio website showcasing my projects, skills, blog posts, and pr
 
 | Technology | Purpose |
 |-----------|---------|
-| **Next.js 14** | React framework with App Router |
+| **Next.js 16** | React framework with App Router |
 | **TypeScript** | Type-safe development |
 | **Tailwind CSS** | Utility-first styling |
 | **Mantine UI** | Component library |
